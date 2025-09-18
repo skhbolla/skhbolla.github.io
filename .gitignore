@@ -1,0 +1,11 @@
+# Hugo output
+public/
+resources/
+.hugo_build.lock
+
+# Editor
+.vscode/
+
+#Hugo binary for local dev
+hugo.exe
+.hugo_build.lock

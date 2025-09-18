@@ -1,0 +1,188 @@
+# Hugo configuration file
+theme: hextra
+baseURL: https://skhbolla.github.io/
+title: SB
+languageCode: en-us
+
+enableInlineShortcodes: true
+enableRobotsTXT: true
+# Parse Git commit
+enableGitInfo: true
+enableEmoji: true
+hasCJKLanguage: true
+
+outputs:
+  home: [html, llms]
+  page: [html]
+  section: [html, rss]
+
+defaultContentLanguage: en
+languages:
+  en:
+    languageName: English
+    weight: 1
+    title: SB
+
+markup:
+  highlight:
+    noClasses: false
+  goldmark:
+    renderer:
+      unsafe: true
+    extensions:
+      passthrough:
+        delimiters:
+          block: [['\[', '\]'], ['$$', '$$']]
+          inline: [['\(', '\)']]
+        enable: true
+
+menu:
+  main:
+    - name: About
+      pageRef: /about
+      weight: 1
+      params:
+        type: link
+        icon: user
+    - name: Blog
+      pageRef: /blog
+      weight: 2
+      params:
+        type: link
+        icon: clipboard
+    - name: Docs
+      pageRef: /docs
+      weight: 3
+      params:
+        type: link
+        icon: book-open
+    - identifier: showcase
+      name: Showcase
+      pageRef: /showcase
+      weight: 4
+      params:
+        type: link
+        icon: collection
+    - name: Search
+      weight: 5
+      params:
+        type: search
+    - name: GitHub
+      weight: 6
+      url: "https://github.com/skhbolla/"
+      params:
+        icon: github
+    - name: LinkedIn
+      weight: 7
+      url: "https://www.linkedin.com/in/srikanthbolla/"
+      params:
+        icon: linkedin
+    - name: Theme Toggle
+      params:
+        type: theme-toggle
+        label: true # optional, default is false
+
+    # Dropdown nav example
+    # - identifier: about-old
+    #   name: v0.10 ↗
+    #   url: https://www.linkedin.com/in/srikanthbolla/
+    #   parent: About
+    # - identifier: about-new
+    #   name: v0.9 ↗
+    #   url: https://www.linkedin.com/in/srikanthbolla/
+    #   parent: About
+
+  # sidebar:
+  #     - identifier: more
+  #       name: More
+  #       params:
+  #         type: separator
+  #       weight: 1
+  #     - identifier: about
+  #       name: "About"
+  #       pageRef: "/about"
+  #       weight: 2
+
+params:
+  banner:
+    key: 'announcement'
+    message: 🚧 Migration to HUGO in progress 🚧 some content isn’t available yet!
+  
+  description: Srikanth Bolla's Personal site.
+
+  externalLinkDecoration: true
+  
+  pageLayoutClass: true
+  
+  # customCSS: assets/css/custom-home.css
+
+  theme:
+    # light | dark | system
+    default: system
+    displayToggle: false #For footer only
+
+  navbar:
+    displayTitle: false
+    displayLogo: true
+    logo:
+      path: images/logo.svg
+      dark: images/logo-dark.svg
+      width: 20
+      height: 20
+      link: /
+    width: wide
+
+  footer:
+    enable: false
+    displayCopyright: false
+    displayPoweredBy: false
+    width: normal
+
+  # Display the last modification date
+  displayUpdatedDate: true
+  dateFormat: "Spetember 15, 2025"
+
+  # Search
+  # flexsearch is enabled by default
+  search:
+    enable: true
+    type: flexsearch
+
+    flexsearch:
+      # index page by: content | summary | heading | title
+      index: content
+      # full | forward | reverse | strict
+      # https://github.com/nextapps-de/flexsearch/#tokenizer-prefix-search
+      tokenize: forward
+
+  editURL:
+    enable: true
+    base: "https://github.com/skhbolla/skhbolla.github.io/edit/main/content"
+
+  blog:
+    list:
+      displayTags: true
+      # date | lastmod | publishDate | title | weight
+      sortBy: date
+      sortOrder: desc # or "asc"
+      # Pagination
+      pagerSize: 20
+
+    article:
+      displayPagination: true
+
+  toc:
+    displayTags: true
+
+  highlight:
+    copy:
+      enable: true
+      # hover | always
+      display: hover
+
+  page:
+    # full (100%), wide (90rem), normal (80rem)
+    width: normal
+    # tabs:
+    #   sync: true
+

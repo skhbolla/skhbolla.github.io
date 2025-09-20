@@ -4,6 +4,10 @@ baseURL: https://skhbolla.github.io/
 title: SB
 languageCode: en-us
 
+services:
+  googleAnalytics:
+    ID: G-P1HC2L977Z
+
 enableInlineShortcodes: true
 enableRobotsTXT: true
 # Parse Git commit

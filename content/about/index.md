@@ -20,7 +20,7 @@ I enjoy exploring:
 {{% steps %}}
 
 ### Application Developer 
-**Organization** : *Internation Business Machines (IBM) India - Client Innovation Center*       
+**Organization** : *International Business Machines Corporation (IBM) India - Client Innovation Center*       
 **Client** : *Phillip Morris International (PMI)*
 
 

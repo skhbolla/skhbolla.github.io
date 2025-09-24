@@ -4,16 +4,18 @@ description: "Recent Projects"
 toc: false
 ---
 
-<div class="hx:mt-4"></div>
-
 > [!IMPORTANT]
-> 🚧 Docs Migration in progress. Please check back later. 🚧
+> 🚧 Site Migration in progress. Most content isn't available yet. 🚧
 
-<!-- {{< cards >}}
+
+{{< cards cols="2" >}}
   {{< card
         link="https://github.com/skhbolla/Boids/"
         title="Boids' Simulation"
         image="https://raw.githubusercontent.com/skhbolla/Boids/refs/heads/main/assets/boids_simulation.gif"
         imageStyle="object-fit:cover; aspect-ratio:16/9;"
+        tag="Documentation Available" 
+        tagColor="yellow" tagIcon="book-open" 
+        tagBorder=false
   >}}
-{{< /cards >}} -->
+{{< /cards >}}

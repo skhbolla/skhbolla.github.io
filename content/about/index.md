@@ -3,10 +3,7 @@ title: "About Me"
 toc: true
 ---
 
-<!-- ![landscape](/images/me.png "Lorem Picsum")
-
-<img src="/images/me.png" alt="drawing" width="200"/> -->
-
+<!-- <img src="/images/me.png" alt="Professional Portrait" width="200" style="margin-bottom: 30px"/> -->
 
 I’m a backend and cloud enthusiast who loves turning ideas into working systems. With over 2 years of experience as a Software Engineer, I’ve worked on building application-level automation and deploying solutions on cloud infrastructure.
 
@@ -22,12 +19,43 @@ I enjoy exploring:
 
 {{% steps %}}
 
-### Cloud Application & Automation Engineer 
+### Application Developer 
 **Organization** : *Internation Business Machines (IBM) India - Client Innovation Center*       
 **Client** : *Phillip Morris International (PMI)*
 
 
 {{% /steps %}}
 
+## Certfications
+
+{{< cards cols="3" >}}
+      {{< card
+        link="https://www.credly.com/badges/7093e44b-ca1e-41f6-9af6-c7e68af979bb/public_url/"
+        title="AWS Certified Developer - Associate"
+        image="/images/aws-certified-developer-associate.png"
+        imageStyle="object-fit:scale-down;"
+
+  >}}
+  {{< card
+        link="https://www.credly.com/badges/7093e44b-ca1e-41f6-9af6-c7e68af979bb/public_url/"
+        title="AWS Certified AI Practitioner - Early Adopter"
+        image="/images/aws-certified-ai-practitioner-early-adopter.png"
+        imageStyle="object-fit:scale-down;"
+  >}}
+  {{< card
+        link="https://www.credly.com/badges/7093e44b-ca1e-41f6-9af6-c7e68af979bb/public_url/"
+        title="AWS Certified Cloud Practitioner"
+        image="/images/aws-certified-cloud-practitioner.png"
+        imageStyle="object-fit:scale-down;"
+  >}}
+  
+{{< /cards >}}
+
+
 Outside work, I like documenting my learnings and experiments in my **[Journal📒](/blog)** and sharing my creations in **[Showcase📂](/showcase)**.
 
+{{% details title="My Motto" closed="true" %}}
+
+> The only stupid question is the one left unasked.
+
+{{% /details %}}

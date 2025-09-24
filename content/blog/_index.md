@@ -10,4 +10,4 @@ cascade:
 ---
 
 > [!IMPORTANT]
-> 🚧 Blog Migration in progress. Please check back later. 🚧
+> 🚧 Site Migration in progress. Most content isn't available yet. 🚧

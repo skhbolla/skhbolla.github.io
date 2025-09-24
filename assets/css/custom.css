@@ -32,6 +32,32 @@
 }
 
 /* Home Page Overrides */
+.hero-title{
+  font-family: var(--hx-font-serif) !important;
+  font-weight: 400 !important;
+  font-size: 2.25rem !important;
+  font-style: unset;
+  letter-spacing: -.015em;  
+
+  margin-bottom: 20px !important;
+
+  display: flex;
+  justify-content: center;
+}
+
+.hero-headline{
+  font-weight: 400 !important;
+  font-size: 1.475rem !important;
+  display: flex;
+  justify-content: center;
+  border-bottom: none;
+  margin-top: 0px;
+}
+
+.hero-intro{
+  text-align: center;
+}
+
 .emoji{
   color: initial;
 }

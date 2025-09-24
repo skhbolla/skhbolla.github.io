@@ -53,7 +53,7 @@ menu:
       weight: 2
       params:
         type: link
-        icon: clipboard
+        icon: document-text
     - name: Docs
       pageRef: /docs
       weight: 3
@@ -110,7 +110,7 @@ menu:
 params:
   banner:
     key: 'announcement'
-    message: 🚧 Migration to HUGO in progress 🚧 some content isn’t available yet!
+    message: 🚧 Site Migration in progress. Most content isn't available yet. 🚧
   
   description: Srikanth Bolla's Personal site.
 
@@ -143,8 +143,8 @@ params:
     width: normal
 
   # Display the last modification date
-  displayUpdatedDate: true
-  dateFormat: "Spetember 15, 2025"
+  displayUpdatedDate: false
+  dateFormat: "September 15, 2025"
 
   # Search
   # flexsearch is enabled by default

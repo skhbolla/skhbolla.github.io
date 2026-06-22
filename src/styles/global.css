@@ -1,0 +1,248 @@
+@import './tokens.css';
+@import './themes.css';
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: light dark;
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+  font-feature-settings: 'calt';
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Links: inherit text color, dotted underline at rest; cobalt + solid on hover */
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: var(--color-text-muted);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--color-link);
+  text-decoration-style: solid;
+  text-decoration-color: var(--color-link);
+}
+
+main, .responsive-padding {
+  padding-inline: var(--space-3);
+}
+
+main {
+  padding-block: var(--space-6);
+  /* expands via media queries below */
+}
+
+/* Code voice — JetBrains Mono for all inline and block code */
+code,
+pre,
+kbd {
+  font-family: var(--font-code);
+  letter-spacing: 0.01em;
+}
+
+/* Label voice — Departure Mono uppercase for nav, dates, meta, captions */
+nav,
+time,
+.meta,
+.label,
+.byline {
+  font-family: var(--font-label);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ─── Selection ───────────────────────────────────────────────────────────── */
+
+::selection {
+  background-color: var(--color-highlight-bg);
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+/* ─── Prose ───────────────────────────────────────────────────────────────── */
+
+.prose {
+  max-width: var(--measure);
+  margin-inline: auto;
+  font-size: var(--text-sm);
+  /* 14px editorial size */
+}
+
+.prose>*+* {
+  margin-top: var(--space-4);
+}
+
+/* Headings */
+.prose h1,
+.prose h2,
+.prose h3 {
+  line-height: var(--leading-tight);
+  font-weight: 500;
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-2);
+}
+
+.prose h1 {
+  font-size: var(--text-2xl);
+}
+
+.prose h2 {
+  font-size: var(--text-xl);
+}
+
+.prose h3 {
+  font-size: var(--text-lg);
+}
+
+/* Paragraphs */
+.prose p {
+  margin: 0;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* Links — adds font-weight and transition on top of the global a{} styles */
+.prose a {
+  font-weight: 500;
+  transition: color 0.15s ease,
+    text-decoration-color 0.15s ease,
+    text-decoration-style 0.15s ease;
+}
+
+/* Blockquote */
+.prose blockquote {
+  margin: var(--space-4) 0;
+  padding-left: var(--space-3);
+  border-left: 2px solid var(--color-border);
+  color: var(--color-text-muted);
+}
+
+/* Lists */
+.prose ul,
+.prose ol {
+  padding-left: var(--space-4);
+}
+
+.prose ul {
+  list-style-type: square;
+}
+
+.prose li+li {
+  margin-top: var(--space-1);
+}
+
+/* Ordered list markers rendered in Departure Mono */
+.prose ol li::marker {
+  font-family: var(--font-label);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+/* Horizontal rule */
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: var(--space-6) 0;
+}
+
+/* Code */
+.prose code {
+  background: var(--color-code-bg);
+  border-radius: var(--radius-base);
+  padding: 0.15em 0.4em;
+  font-size: 0.9em;
+}
+
+.prose pre {
+  background: var(--color-code-bg);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
+  overflow-x: auto;
+}
+
+.prose pre code {
+  background: none;
+  padding: 0;
+}
+
+/* Dual-theme Shiki integration */
+.prose .astro-code,
+.prose .astro-code span {
+  color: var(--shiki-light);
+  background-color: var(--shiki-light-bg);
+  font-style: var(--shiki-light-font-style);
+  font-weight: var(--shiki-light-font-weight);
+  text-decoration: var(--shiki-light-text-decoration);
+}
+
+html[data-theme='dark'] .prose .astro-code,
+html[data-theme='dark'] .prose .astro-code span {
+  color: var(--shiki-dark);
+  background-color: var(--shiki-dark-bg);
+  font-style: var(--shiki-dark-font-style);
+  font-weight: var(--shiki-dark-font-weight);
+  text-decoration: var(--shiki-dark-text-decoration);
+}
+
+/* Tables */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.prose th,
+.prose td {
+  text-align: left;
+  padding: var(--space-1) var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* Images and figures */
+.prose img,
+.prose figure {
+  max-width: 100%;
+}
+
+/* ─── Responsive ──────────────────────────────────────────────────────────── */
+/* Mobile-first: main padding grows 1rem → 2rem → 3rem. */
+
+/* ≥ 640px */
+@media (min-width: 40rem) {
+  main, .responsive-padding {
+    padding-inline: var(--space-5);
+  }
+}
+
+/* ≥ 768px */
+@media (min-width: 48rem) {
+  main, .responsive-padding {
+    padding-inline: var(--space-6);
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

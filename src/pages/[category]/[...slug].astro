@@ -1,0 +1,39 @@
+---
+import { getCollection, render } from 'astro:content';
+import PostLayout from '../../layouts/PostLayout.astro';
+import { CATEGORY_MAP } from '../../utils/categories';
+
+export async function getStaticPaths() {
+  const paths = [];
+
+  for (const [category, meta] of Object.entries(CATEGORY_MAP)) {
+    const posts = await getCollection(meta.collection, ({ data }: any) => !data.draft);
+    for (const post of posts) {
+      paths.push({
+        params: { category, slug: post.id },
+        props: { post, meta },
+      });
+    }
+  }
+
+  return paths;
+}
+
+const { category } = Astro.params;
+const { post, meta } = Astro.props;
+const { Content, headings } = await render(post);
+---
+
+<PostLayout 
+  title={post.data.title} 
+  subtitle={post.data.subtitle}
+  author={post.data.author}
+  heroImage={post.data.heroImage}
+  description={post.data.description} 
+  date={post.data.date} 
+  category={meta.title}
+  categoryUrl={`/${category}`}
+  tags={post.data.tags} 
+  headings={headings}>
+  <Content />
+</PostLayout>

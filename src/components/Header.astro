@@ -1,0 +1,52 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+---
+
+<header class="site-header responsive-padding">
+  <nav>
+    <a href="/">home</a>
+    <a href="/mech-sympathy/">mechanical sympathy</a>
+    <a href="/dsa/">dsa</a>
+  </nav>
+  <ThemeToggle />
+</header>
+
+<style>
+  .site-header {
+    max-width: var(--measure);
+    margin-inline: auto;
+    padding-block: var(--space-4);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  nav {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap; /* allow wrapping on tiny screens */
+  }
+
+  nav a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    font-size: var(--text-sm);
+  }
+
+  nav a:hover {
+    color: var(--color-text);
+  }
+
+  /* On very small screens (< 360px) tighten the nav gap and
+     let the header stack: nav on top, theme toggle underneath. */
+  @media (max-width: 22.5rem) {
+    .site-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-2);
+    }
+    nav {
+      gap: var(--space-2);
+    }
+  }
+</style>

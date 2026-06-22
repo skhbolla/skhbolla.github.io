@@ -1,17 +1,18 @@
 ---
-
+import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title="Home">
+  <div class="prose">
+    <h1>Two threads, one site</h1>
+    <p>
+      This is where I write about two things: how computers actually work
+      underneath the abstractions (<a href="/mech-sympathy/">mechanical
+      sympathy</a>), and the data structures and algorithms that sit on top
+      of them (<a href="/dsa/">dsa</a>).
+    </p>
+    <p>
+      Pick a path above, or just start reading.
+    </p>
+  </div>
+</BaseLayout>

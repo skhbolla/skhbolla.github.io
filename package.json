@@ -1,5 +1,5 @@
 {
-  "name": "astro",
+  "name": "blog",
   "type": "module",
   "version": "0.0.1",
   "engines": {
@@ -12,6 +12,8 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/mdx": "^6.0.3",
+    "@astrojs/rss": "^4.0.18",
     "astro": "^6.4.7"
   }
 }

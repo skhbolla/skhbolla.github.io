@@ -1,0 +1,31 @@
+<button id="theme-toggle" class="label" aria-label="Toggle color theme">theme</button>
+
+<style>
+  #theme-toggle {
+    background: none;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    padding: 0.3em 0.7em;
+    cursor: pointer;
+  }
+  #theme-toggle:hover {
+    color: var(--color-text);
+    border-color: var(--color-text-muted);
+  }
+</style>
+
+<script>
+  // Append new theme names here as you build them — nothing else about
+  // this component needs to change. Color values for each name live in
+  // src/styles/themes.css as [data-theme="name"] blocks.
+  const themes = ['light', 'dark'];
+
+  document.getElementById('theme-toggle')?.addEventListener('click', () => {
+    const current = document.documentElement.dataset.theme ?? 'light';
+    const next = themes[(themes.indexOf(current) + 1) % themes.length];
+    document.documentElement.dataset.theme = next;
+    localStorage.setItem('theme', next);
+  });
+</script>

@@ -1,0 +1,34 @@
+---
+import { formatDate } from '../utils/formatDate';
+
+interface Props {
+  posts: any[];
+  basePath: string;
+}
+
+const { posts, basePath } = Astro.props;
+---
+
+<ul class="post-list">
+  {posts.map((post) => (
+    <li>
+      <a href={`${basePath}/${post.id}/`}>{post.data.title}</a>
+      <p class="meta">{formatDate(post.data.date)}</p>
+      <p>{post.data.description}</p>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .post-list {
+    list-style: none;
+    padding: 0;
+  }
+  .post-list li + li {
+    margin-top: var(--space-5);
+  }
+  .post-list a {
+    font-size: var(--text-lg);
+    text-decoration: none;
+  }
+</style>

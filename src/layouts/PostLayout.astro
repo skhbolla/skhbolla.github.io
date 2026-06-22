@@ -1,0 +1,138 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import Breadcrumb from "../components/Breadcrumb.astro";
+import PostHeader from "../components/PostHeader.astro";
+import { formatDate } from "../utils/formatDate";
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  author?: string;
+  heroImage?: any;
+  description: string;
+  date: Date;
+  category: string;
+  categoryUrl: string;
+  tags?: string[];
+  headings: { depth: number; slug: string; text: string }[];
+}
+
+const {
+  title,
+  subtitle,
+  author,
+  heroImage,
+  description,
+  date,
+  category,
+  categoryUrl,
+  tags,
+  headings,
+} = Astro.props;
+
+const formattedDate = formatDate(date);
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="post-grid">
+    <div class="toc-container">
+      {headings.length > 0 && <TableOfContents headings={headings} />}
+    </div>
+
+    <div class="paper-wrapper">
+      <Breadcrumb category={category} categoryUrl={categoryUrl} title={title} />
+      <article class="paper-overlay prose">
+        <PostHeader
+          title={title}
+          subtitle={subtitle}
+          author={author}
+          formattedDate={formattedDate}
+          heroImage={heroImage}
+        />
+        <slot />
+      </article>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .post-grid {
+    display: grid;
+    /* 3 columns: Left sidebar, center paper, empty right space to keep centered */
+    grid-template-columns: 1fr minmax(auto, var(--measure)) 1fr;
+    gap: var(--space-6);
+    max-width: 90rem;
+    margin-inline: auto;
+    align-items: flex-start;
+  }
+
+  .toc-container {
+    position: relative;
+    height: 100%;
+  }
+
+  /* Constrain the center column wrapper so flex children can shrink and text can truncate */
+  .paper-wrapper {
+    min-width: 0;
+    max-width: var(--measure);
+    margin-inline: auto;
+    width: 100%;
+  }
+
+  /* The Premium Paper Overlay */
+  .paper-overlay {
+    background: var(--color-paper);
+    padding: var(--space-7) var(--space-7);
+    border-radius: var(--radius-sm);
+    box-shadow:
+      0 4px 6px -1px rgba(0, 0, 0, 0.05),
+      0 2px 4px -2px rgba(0, 0, 0, 0.05),
+      0 0 0 1px rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    margin-bottom: var(--space-8);
+    position: relative;
+  }
+
+  /* Dark mode paper styling */
+  :global([data-theme="dark"]) .paper-overlay {
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.05),
+      0 4px 24px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--color-border);
+  }
+
+  /* Tablet Fallback */
+  @media (max-width: 64rem) {
+    .post-grid {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .toc-container {
+      height: auto;
+    }
+    .paper-overlay {
+      padding: var(--space-5) var(--space-5);
+    }
+  }
+
+  /* Mobile Edge-to-Edge */
+  @media (max-width: 48rem) {
+    .paper-overlay {
+      padding: var(--space-4) var(--space-4);
+      border-radius: 0;
+      border: none;
+      box-shadow: none;
+      margin-bottom: 0;
+    }
+  }
+</style>
+
+<style is:global>
+  /* On mobile post pages, the entire screen background matches the paper, dropping the metaphor completely */
+  @media (max-width: 48rem) {
+    body {
+      background: var(--color-bg-raised);
+    }
+  }
+</style>

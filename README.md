@@ -1,43 +1,66 @@
-# Astro Starter Kit: Minimal
+# Blog
 
-```sh
-npm create astro@latest -- --template minimal
+A two-section blog — mechanical sympathy and DSA — built with Astro,
+content collections, and a CSS-variable theme system. Deploys to GitHub
+Pages.
+
+## Setup
+
+```bash
+npm install
+npm run dev      # localhost:4321
+npm run build    # outputs to dist/
+npm run preview  # serve the built output locally
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Before deploying, update `site` in `astro.config.mjs` to your actual
+`https://your-username.github.io` URL — it's currently a placeholder.
 
-## 🚀 Project Structure
+## Fonts
 
-Inside of your Astro project, you'll see the following folders and files:
+Body text is set in **Newsreader** (open-source, self-hosted variable font)
+and labels/code in **Departure Mono**.
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+## Structure
+
+- `src/content/dsa/` and `src/content/mech-sympathy/` — your posts, as
+  `.md` or `.mdx` (mix freely — see the one `.mdx` sample post for how to
+  embed a component in prose).
+- `src/content.config.ts` — collection schemas. Add a frontmatter field
+  here before using it in a post, or the build will fail with a clear
+  validation error.
+- `src/layouts/BaseLayout.astro` — head, fonts, theme script, shared
+  header. `PostLayout.astro` wraps individual posts on top of it.
+- `src/styles/tokens.css` — fonts, spacing, type scale (no color).
+- `src/styles/themes.css` — color tokens per `[data-theme]`. Add a new
+  theme by adding a block here and one entry in
+  `src/components/ThemeToggle.astro`'s `themes` array.
+- `src/styles/global.css` — base styles, prose typography, and the
+  text-selection highlight effect.
+
+## Writing a post
+
+Drop a `.md` (or `.mdx`, if it needs an embedded component) file into
+either `src/content/dsa/` or `src/content/mech-sympathy/` with this
+frontmatter:
+
+```md
+---
+title: "Post title"
+description: "One sentence, used in listings and RSS."
+date: 2026-06-21
+tags: ["optional", "tags"]
+---
+
+Your content here.
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+It'll show up in that section's listing and RSS feed automatically — no
+other file needs to change. Set `draft: true` to keep a post out of both
+until it's ready.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## Deploying
 
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Push to `main`. The existing `.github/workflows/deploy.yml` builds and
+publishes via GitHub Actions — make sure repo Settings → Pages → Source is
+set to "GitHub Actions."

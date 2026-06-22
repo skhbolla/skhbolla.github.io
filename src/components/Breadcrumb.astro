@@ -1,0 +1,57 @@
+---
+interface Props {
+  category: string;
+  categoryUrl: string;
+  title: string;
+}
+
+const { category, categoryUrl, title } = Astro.props;
+---
+
+<div class="breadcrumb">
+  <a href={categoryUrl} class="label">{category}</a>
+  <span class="label divider">/</span>
+  <span class="label current">{title}</span>
+</div>
+
+<style>
+  .breadcrumb {
+    margin-bottom: var(--space-3);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-wrap: nowrap;
+    min-width: 0;
+  }
+
+  .breadcrumb .label {
+    font-size: 0.6875rem; /* 11px */
+    margin: 0;
+    line-height: 1;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+
+  .breadcrumb a.label {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.15s ease;
+    flex-shrink: 0; /* Category name shouldn't shrink */
+  }
+
+  .breadcrumb a.label:hover {
+    color: var(--color-text);
+  }
+
+  .breadcrumb .divider {
+    flex-shrink: 0;
+  }
+
+  .breadcrumb .current {
+    color: var(--color-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0; /* Allows flex child to truncate properly */
+    display: block;
+  }
+</style>

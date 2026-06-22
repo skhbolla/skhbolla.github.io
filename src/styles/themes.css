@@ -1,0 +1,75 @@
+/*
+  Color tokens only. Adding a new theme later means adding one more
+  [data-theme="x"] block here and one entry in ThemeToggle.astro's
+  `themes` array — nothing else in the site needs to change.
+*/
+
+/* ─── Light ──────────────────────────────────────────────────────────────────
+   Neutrals are from the "stone" family (oklch hue ≈ 49–58, very low chroma)
+   which sits just barely warm of true grey — matching Arizona/Newsreader's
+   optical character. Links are cobalt-600 (their production value).
+   ──────────────────────────────────────────────────────────────────────────── */
+[data-theme='light'] {
+   --color-bg: #f4f4f5;
+   /* slightly darker gray to let paper pop  */
+   --color-bg-raised: oklch(96.7% .001 286.375);
+   /* zinc-100 — cards, code, raised panels  */
+   --color-paper: #ffffff;
+   /* pure white paper overlay               */
+   --color-text: oklch(14.7% .004 49.25);
+   /* stone-950 — near-black body text       */
+   --color-text-muted: oklch(44.4% .011 73.639);
+   /* stone-600 — dates, captions, meta      */
+   --color-border: oklch(86.9% .005 56.366);
+   /* stone-300 — dividers, outlines         */
+   --color-accent: oklch(50.58% .2886 264.84);
+   /* cobalt-600 — interactive accent        */
+   --color-link: oklch(50.58% .2886 264.84);
+   /* cobalt-600 — prose links               */
+
+   /* amber-200 selection highlight */
+   --color-highlight-bg: oklch(92.4% .12 95.746);
+   --color-highlight-text: oklch(14.7% .004 49.25);
+   /* stone-950 on amber — good contrast      */
+
+   --color-code-bg: oklch(95.5% .002 286);
+   /* off-white surface for inline/block code */
+}
+
+/* ─── Dark ───────────────────────────────────────────────────────────────────
+   Color-theory counterpart. Core principles:
+   1. Same stone hue axis (h ≈ 49) for bg/text — maintains the warm-neutral
+      character of the light theme without going fully grey or fully amber.
+   2. Cobalt link color steps up from cobalt-600 → cobalt-300 because on a
+      dark surface you need ~2× the lightness to hit the same perceptual weight.
+   3. Amber highlight bg is "crushed" to dark-mode luminance (~30%) while
+      preserving the hue — text flips to a bright amber-300 for legibility.
+   4. Borders use very low chroma (~.005) at 22% lightness — just enough to
+      divide surfaces without competing with content.
+   ──────────────────────────────────────────────────────────────────────────── */
+[data-theme='dark'] {
+   --color-bg: oklch(13% .004 49.25);
+   /* deep stone-dark — below stone-950      */
+   --color-bg-raised: oklch(17% .005 49.25);
+   /* slightly elevated surface              */
+   --color-paper: var(--color-bg-raised);
+   /* matches raised background              */
+   --color-text: oklch(92% .005 49.25);
+   /* warm off-white — same stone hue family */
+   --color-text-muted: oklch(56% .010 56);
+   /* stone-500 range — readable but receded */
+   --color-border: oklch(22% .005 49.25);
+   /* subtle warm-dark divider               */
+   --color-accent: oklch(76.12% .1218 272.4);
+   /* cobalt-300 — light enough on dark bg   */
+   --color-link: oklch(76.12% .1218 272.4);
+   /* cobalt-300 — prose links               */
+
+   /* Dark amber: same hue as amber-200, luminance crushed to 30% */
+   --color-highlight-bg: oklch(30% .09 80);
+   --color-highlight-text: oklch(90% .12 91.605);
+   /* amber-300 range — legible on dark glow */
+
+   --color-code-bg: oklch(17% .005 49.25);
+   /* matches bg-raised                      */
+}

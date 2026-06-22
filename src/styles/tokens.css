@@ -1,0 +1,98 @@
+/*
+  Typography + spacing tokens. Nothing in here is color — that all lives in
+  themes.css so the two can change independently.
+
+  All 3 fonts are plain static files in public/fonts/, declared with
+  @font-face below. No build-time font processing, no provider, no
+  package.
+*/
+
+/* Departure Mono — public/fonts/DepartureMono-Regular.woff2 (OFL-1.1,
+   license file alongside it). */
+@font-face {
+  font-family: 'Departure Mono';
+  src: url('/fonts/DepartureMono-Regular.woff2') format('woff2');
+  font-weight: 500;
+  /* the font only ships one weight, internally tagged 500 */
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Newsreader — open-source. Variable fonts, so
+   one file each covers the full weight range (200-800) plus an optical
+   size axis that auto-adjusts letterforms at different text sizes.
+   OFL-1.1, license file alongside it in public/fonts/. */
+@font-face {
+  font-family: 'Newsreader';
+  src: url('/fonts/Newsreader-Variable.woff2') format('woff2-variations');
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Newsreader';
+  src: url('/fonts/Newsreader-Italic-Variable.woff2') format('woff2-variations');
+  font-weight: 200 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* JetBrains Mono — dedicated code voice, separate from Departure Mono's
+   label voice. Departure is great for short uppercase labels but isn't
+   built for dense code reading (character disambiguation, ligatures);
+   JetBrains Mono is purpose-built for that. */
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Variable.woff2') format('woff2-variations');
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Italic-Variable.woff2') format('woff2-variations');
+  font-weight: 100 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  /* Roles, not font names directly — everything else in the site should
+     reference --font-body / --font-label / --font-code, never a font name
+     directly. That's what lets you swap a typeface later by changing
+     exactly one line. */
+  --font-body: 'Newsreader', 'Source Serif 4', Georgia, serif;
+  --font-label: 'Departure Mono', 'IBM Plex Mono', monospace;
+  --font-code: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+
+  /* Fluid Type Scale */
+  --text-xs: clamp(0.7rem, 2vw, 0.75rem);
+  --text-sm: clamp(0.8rem, 2.5vw, 0.875rem);
+  --text-base: clamp(0.95rem, 3vw, 1rem);
+  --text-lg: clamp(1.125rem, 3.5vw, 1.25rem);
+  --text-xl: clamp(1.5rem, 4vw, 1.75rem);
+  --text-2xl: clamp(1.8rem, 5vw, 2.25rem);
+
+  --leading-body: 1.8;
+  --leading-tight: 1.25;
+
+  /* Spacing rhythm */
+  --space-1: 0.5rem;
+  --space-2: 0.75rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+  --space-5: 2rem;
+  --space-6: 3rem;
+  --space-7: 4.5rem;
+  --space-8: 6rem;
+
+  /* Reading width */
+  --measure: 45rem;
+
+  /* Corner radius */
+  --radius-sm: 2px;
+  --radius-base: 4px;
+  --radius-lg: 6px;
+}

@@ -1,0 +1,238 @@
+---
+interface Props {
+  headings: { depth: number; slug: string; text: string }[];
+}
+
+const { headings } = Astro.props;
+---
+
+<button id="toc-toggle" class="toc-toggle" aria-label="Table of Contents">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <line x1="3" y1="12" x2="21" y2="12"></line>
+    <line x1="3" y1="6" x2="21" y2="6"></line>
+    <line x1="3" y1="18" x2="21" y2="18"></line>
+  </svg>
+</button>
+
+<aside id="toc-sidebar" class="toc-sidebar">
+  <div class="toc-header">
+    <span class="label">Contents</span>
+    <button id="toc-close" class="toc-close" aria-label="Close Table of Contents">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+  <nav class="toc-nav">
+    <ul>
+      {headings.filter(h => h.depth > 1 && h.depth < 4).map(heading => (
+        <li class={`depth-${heading.depth}`}>
+          <a href={`#${heading.slug}`} data-toc-link>{heading.text}</a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+</aside>
+
+<div id="toc-backdrop" class="toc-backdrop"></div>
+
+<style>
+  .toc-toggle {
+    display: none; /* hidden on large screens */
+  }
+
+  .toc-sidebar {
+    position: sticky;
+    top: calc(var(--space-6) + var(--space-4));
+    max-height: calc(100vh - var(--space-6) * 2);
+    overflow-y: auto;
+    font-size: 0.75rem; /* tiny text */
+    font-family: var(--font-label);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
+  }
+  .toc-sidebar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .toc-header {
+    display: none; /* hidden on desktop */
+  }
+
+  .toc-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-left: 1px solid var(--color-border);
+    margin-left: 1px;
+  }
+
+  .toc-nav li {
+    margin-bottom: var(--space-3);
+  }
+
+  .toc-nav li.depth-3 {
+    padding-left: var(--space-2);
+  }
+
+  .toc-nav a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.15s ease, font-weight 0.15s ease;
+    display: block;
+    padding-left: var(--space-3);
+    margin-left: -1px; /* overlap the border */
+    border-left: 1px solid transparent;
+    opacity: 0.7;
+  }
+
+  .toc-nav a:hover {
+    color: var(--color-text);
+    opacity: 1;
+  }
+  
+  .toc-nav a.active {
+    color: var(--color-accent);
+    border-left-color: var(--color-accent);
+    opacity: 1;
+  }
+
+  .toc-backdrop {
+    display: none;
+  }
+
+  /* Mobile/Tablet View */
+  @media (max-width: 64rem) {
+    .toc-toggle {
+      display: flex;
+      position: fixed;
+      bottom: var(--space-4);
+      left: var(--space-4);
+      background: var(--color-bg-raised);
+      border: 1px solid var(--color-border);
+      border-radius: 50%;
+      width: 3rem;
+      height: 3rem;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      color: var(--color-text);
+      cursor: pointer;
+    }
+
+    .toc-sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 18rem;
+      max-width: 80vw;
+      max-height: 100vh;
+      background: var(--color-bg-raised);
+      z-index: 50;
+      padding: var(--space-4);
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      border-right: 1px solid var(--color-border);
+    }
+
+    .toc-sidebar.open {
+      transform: translateX(0);
+    }
+
+    .toc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-4);
+      padding-bottom: var(--space-2);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .toc-close {
+      background: none;
+      border: none;
+      color: var(--color-text);
+      cursor: pointer;
+      padding: var(--space-1);
+    }
+
+    .toc-backdrop {
+      display: block;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 45;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .toc-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+</style>
+
+<script>
+  // Mobile Drawer Logic
+  const toggle = document.getElementById('toc-toggle');
+  const close = document.getElementById('toc-close');
+  const sidebar = document.getElementById('toc-sidebar');
+  const backdrop = document.getElementById('toc-backdrop');
+  
+  function openToc() {
+    sidebar?.classList.add('open');
+    backdrop?.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  
+  function closeToc() {
+    sidebar?.classList.remove('open');
+    backdrop?.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  toggle?.addEventListener('click', openToc);
+  close?.addEventListener('click', closeToc);
+  backdrop?.addEventListener('click', closeToc);
+
+  const links = sidebar?.querySelectorAll('a');
+  links?.forEach(link => {
+    link.addEventListener('click', closeToc);
+  });
+
+  // Intersection Observer for highlighting active section
+  const observerOptions = {
+    root: null,
+    rootMargin: '-20% 0px -80% 0px', // triggers when heading hits the top 20%
+    threshold: 1.0
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Remove active from all
+        document.querySelectorAll('[data-toc-link]').forEach(link => {
+          link.classList.remove('active');
+        });
+        // Add active to current
+        const id = entry.target.getAttribute('id');
+        const activeLink = document.querySelector(`[data-toc-link][href="#${id}"]`);
+        if (activeLink) {
+          activeLink.classList.add('active');
+        }
+      }
+    });
+  }, observerOptions);
+
+  // Observe all headings that have an ID
+  document.querySelectorAll('article h2[id], article h3[id]').forEach((section) => {
+    observer.observe(section);
+  });
+</script>

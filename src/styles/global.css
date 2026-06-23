@@ -12,7 +12,8 @@ html {
     Account for fixed header.
   */
   scroll-padding-top: var(--scroll-padding);
-  font-size: 16px; /* Default baseline */
+  font-size: 16px;
+  /* Default baseline */
 }
 
 /* 
@@ -23,20 +24,21 @@ html {
   - On large screens, we scale DOWN to increase negative space on the margins.
   - On small screens, we scale DOWN to compress massive spacing blocks and free up content real estate.
 */
-@media (max-width: 48rem) {
+@media (max-width: 64rem) {
   html {
-    font-size: 15px;
+    font-size: 15.5px;
   }
 }
 
 @media (max-width: 35rem) {
   html {
-    font-size: 14px;
+    font-size: 15px;
   }
 }
+
 @media (min-width: 64rem) {
   html {
-    font-size: 15.2px;
+    font-size: 16px;
   }
 }
 
@@ -75,7 +77,8 @@ a:hover {
   text-decoration-color: var(--color-link);
 }
 
-main, .responsive-padding {
+main,
+.responsive-padding {
   padding-inline: var(--space-3);
 }
 
@@ -131,21 +134,21 @@ time,
 .prose h2,
 .prose h3 {
   line-height: var(--leading-tight);
-  font-weight: 500;
+  font-weight: 600;
   margin-top: var(--space-6);
   margin-bottom: var(--space-2);
 }
 
 .prose h1 {
-  font-size: var(--text-2xl);
-}
-
-.prose h2 {
   font-size: var(--text-xl);
 }
 
-.prose h3 {
+.prose h2 {
   font-size: var(--text-lg);
+}
+
+.prose h3 {
+  font-size: var(--text-base);
 }
 
 /* Paragraphs */
@@ -256,7 +259,11 @@ html[data-theme='dark'] .prose .astro-code span {
 /* Images and figures */
 .prose img,
 .prose figure {
+  width: 100%;
   max-width: 100%;
+  height: auto;
+  display: block;
+  margin-inline: 0;
 }
 
 /* ─── Responsive ──────────────────────────────────────────────────────────── */
@@ -264,14 +271,18 @@ html[data-theme='dark'] .prose .astro-code span {
 
 /* ≥ 640px */
 @media (min-width: 40rem) {
-  main, .responsive-padding {
+
+  main,
+  .responsive-padding {
     padding-inline: var(--space-5);
   }
 }
 
 /* ≥ 768px */
 @media (min-width: 48rem) {
-  main, .responsive-padding {
+
+  main,
+  .responsive-padding {
     padding-inline: var(--space-6);
   }
 }

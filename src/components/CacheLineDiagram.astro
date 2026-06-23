@@ -45,7 +45,7 @@ const fields = ["x", "y", "lock", "pad"];
       y="84"
       text-anchor="middle"
       font-family="var(--font-label)"
-      font-size="12"
+      font-size="10"
       fill="var(--color-text-muted)"
     >
       one 64-byte cache line
@@ -57,11 +57,18 @@ const fields = ["x", "y", "lock", "pad"];
 <style>
   .cache-line {
     margin-block: var(--space-4);
+    margin-inline: 0;
+    width: 100%;
+  }
+  .cache-line svg {
+    width: 100%;
+    height: auto;
+    display: block;
   }
   .cache-line figcaption {
     text-align: center;
     color: var(--color-text-muted);
-    font-size: var(--text-sm);
+    font-size: var(--text-xs);
     margin-top: var(--space-1);
   }
 </style>

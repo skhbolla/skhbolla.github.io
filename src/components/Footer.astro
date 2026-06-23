@@ -1,0 +1,94 @@
+---
+// Footer.astro
+---
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="divider" aria-hidden="true" role="presentation">
+      <span class="fade">░▒▓</span>
+      <span class="fill"
+        >██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████</span
+      >
+      <span class="fade">▓▒░</span>
+    </div>
+    <div class="footer-content">
+      <p class="shoutouts">
+        Theme inspired by <a
+          href="https://makingsoftware.com"
+          target="_blank"
+          rel="noopener noreferrer">Makingsoftware.com</a
+        > • Hosted with ♥ on <a
+          href="https://github.com/skhbolla/skhbolla.github.io/"
+          target="_blank"
+          rel="noopener noreferrer">GitHub</a
+        >
+      </p>
+      <p class="copyright">
+        &copy; {new Date().getFullYear()} Srikanth Bolla
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--space-8);
+    width: 100%;
+  }
+
+  .footer-inner {
+    max-width: var(--measure);
+    margin-inline: auto;
+    padding-bottom: var(--space-4);
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    white-space: nowrap;
+    user-select: none;
+    color: var(--color-border);
+    font-family: var(--font-label);
+    font-size: var(--text-xs);
+    line-height: 1;
+    margin-bottom: var(--space-3);
+  }
+
+  .fade {
+    flex-shrink: 0;
+  }
+
+  .fill {
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: clip;
+    letter-spacing: -0.05em;
+  }
+
+  .footer-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--color-text-muted);
+    font-family: var(--font-label);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .shoutouts,
+  .copyright {
+    margin: 0;
+  }
+
+  /* Responsive styling for smaller devices */
+  @media (max-width: 48rem) {
+    .footer-content {
+      flex-direction: column;
+      gap: var(--space-2);
+      text-align: center;
+    }
+  }
+</style>

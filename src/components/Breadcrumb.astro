@@ -17,19 +17,19 @@ const { category, categoryUrl, title } = Astro.props;
 
 <script>
   const setupObserver = () => {
-    const el = document.getElementById('breadcrumb-nav');
+    const el = document.getElementById("breadcrumb-nav");
     if (!el) return;
-    
+
     // threshold: [1] triggers when the element is less than 100% visible
     const observer = new IntersectionObserver(
-      ([e]) => el.classList.toggle('is-stuck', e.intersectionRatio < 1),
-      { threshold: [1], rootMargin: "0px 0px 0px 0px" }
+      ([e]) => el.classList.toggle("is-stuck", e.intersectionRatio < 1),
+      { threshold: [1], rootMargin: "0px 0px 0px 0px" },
     );
     observer.observe(el);
   };
-  
+
   setupObserver();
-  document.addEventListener('astro:page-load', setupObserver);
+  document.addEventListener("astro:page-load", setupObserver);
 </script>
 
 <style>
@@ -40,25 +40,29 @@ const { category, categoryUrl, title } = Astro.props;
     gap: var(--space-2);
     flex-wrap: nowrap;
     min-width: 0;
-    
+
     position: sticky;
     top: -1px;
     z-index: 40;
-    
+
     background-color: var(--color-bg);
     padding: var(--space-2) var(--space-3);
     padding-top: calc(var(--space-2) + 1px); /* Compensate for top: -1px */
-    
+
     border-radius: var(--radius-sm);
     border: var(--border-thin) solid transparent; /* No visible border at rest to avoid layout jump */
-    
-    transition: background-color 0.2s ease, border-color 0.2s ease, border-radius 0.2s ease, box-shadow 0.2s ease;
+
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      border-radius 0.2s ease,
+      box-shadow 0.2s ease;
   }
 
   .breadcrumb.is-stuck {
     backdrop-filter: blur(var(--blur-md));
     background-color: var(--color-paper-glass);
-    
+
     /* Paper shadow and border on stick */
     box-shadow: var(--shadow-paper);
     border: var(--border-thin) solid rgba(0, 0, 0, 0.04);
@@ -88,6 +92,12 @@ const { category, categoryUrl, title } = Astro.props;
     line-height: 1;
     color: var(--color-text-muted);
     white-space: nowrap;
+  }
+
+  @media (max-width: 90rem) {
+    .breadcrumb .label {
+      font-size: var(--text-xs);
+    }
   }
 
   .breadcrumb .glyph {

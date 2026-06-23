@@ -1,5 +1,5 @@
 ---
-import ThemeToggle from './ThemeToggle.astro';
+import ThemeToggle from "./ThemeToggle.astro";
 
 const { pathname } = Astro.url;
 
@@ -7,13 +7,13 @@ const { pathname } = Astro.url;
 // We use startsWith to keep categories active when viewing individual posts,
 // but exact match for home to avoid matching everything.
 function isActive(href: string) {
-  if (href === '/') return pathname === '/';
+  if (href === "/") return pathname === "/";
   return pathname.startsWith(href);
 }
 
 const navLinks = [
-  { href: '/projects', label: 'Projects' },
-  { href: '/about', label: 'About' },
+  { href: "/projects", label: "Projects" },
+  { href: "/about", label: "About" },
 ];
 ---
 
@@ -22,15 +22,17 @@ const navLinks = [
     <a href="/" class="brand">[ srikanth.bolla ]</a>
     <div class="nav-container">
       <nav aria-label="Primary">
-        {navLinks.map(link => (
-          <a
-            href={link.href}
-            class={isActive(link.href) ? 'active' : ''}
-            data-active={isActive(link.href) ? 'true' : 'false'}
-          >
-            {link.label}
-          </a>
-        ))}
+        {
+          navLinks.map((link) => (
+            <a
+              href={link.href}
+              class={isActive(link.href) ? "active" : ""}
+              data-active={isActive(link.href) ? "true" : "false"}
+            >
+              {link.label}
+            </a>
+          ))
+        }
       </nav>
       <div class="toggle-wrapper">
         <ThemeToggle />
@@ -47,7 +49,7 @@ const navLinks = [
   .header-inner {
     max-width: var(--measure);
     margin-inline: auto;
-    padding-block: var(--space-4);
+    padding-block: var(--space-5);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -59,7 +61,7 @@ const navLinks = [
     font-weight: 700;
     color: var(--color-text);
     text-decoration: none;
-    letter-spacing: -0.05em;
+    letter-spacing: var(--tracking-brand);
   }
 
   .brand:hover {
@@ -90,7 +92,9 @@ const navLinks = [
     border-radius: var(--radius-sm);
     box-shadow: var(--btn-shadow);
     text-transform: uppercase;
-    transition: background-color 0.15s ease, border-color 0.15s ease;
+    transition:
+      background-color var(--transition-fast),
+      border-color var(--transition-fast);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -121,12 +125,24 @@ const navLinks = [
     .header-inner {
       flex-direction: column;
       align-items: flex-start;
-      gap: var(--space-4);
+      gap: var(--space-3);
+      padding-block: var(--space-3);
     }
-    
+
+    .brand {
+      font-size: var(--text-base);
+    }
+
     .nav-container {
       width: 100%;
       justify-content: space-between;
+    }
+  }
+
+  /* Large screens: more vertical breathing */
+  @media (min-width: 64rem) {
+    .header-inner {
+      padding-block: var(--space-6);
     }
   }
 </style>

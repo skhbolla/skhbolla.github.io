@@ -1,17 +1,64 @@
 ---
-import { getCollection, render } from 'astro:content';
-import PostLayout from '../../layouts/PostLayout.astro';
-import { CATEGORY_MAP } from '../../utils/categories';
+import { getCollection, render } from "astro:content";
+import PostLayout from "../../layouts/PostLayout.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostList from "../../components/PostList.astro";
+import type { ListItem } from "../../components/PostList.astro";
+import { CATEGORY_MAP } from "../../utils/categories";
+import Breadcrumb from "../../components/Breadcrumb.astro";
+
+type Props = 
+  | { type: 'post'; meta: any; post: any }
+  | { type: 'directory'; meta: any; posts: any[]; activeDir: string };
 
 export async function getStaticPaths() {
   const paths = [];
 
   for (const [category, meta] of Object.entries(CATEGORY_MAP)) {
-    const posts = await getCollection(meta.collection, ({ data }: any) => !data.draft);
+    const posts = await getCollection(
+      meta.collection,
+      ({ data }: any) => !data.draft,
+    );
+
+    // 1. Collect all subdirectories in the collection
+    const directories = new Set<string>();
+    posts.forEach((post: any) => {
+      const parts = post.id.split("/");
+      parts.pop(); // Remove filename
+
+      // Add all levels of subdirectories (e.g. "trees", "trees/binary-trees")
+      for (let i = 1; i <= parts.length; i++) {
+        directories.add(parts.slice(0, i).join("/"));
+      }
+    });
+
+    // 2. Add Category Root Index path (slug = undefined)
+    paths.push({
+      params: { category, slug: undefined },
+      props: { type: "directory", meta, posts, activeDir: "" },
+    });
+
+    // 3. Add Subdirectory index paths
+    for (const dir of directories) {
+      const filteredPosts = posts.filter((post: any) =>
+        post.id.startsWith(dir + "/"),
+      );
+      paths.push({
+        params: { category, slug: dir },
+        props: {
+          type: "directory",
+          meta,
+          posts: filteredPosts,
+          activeDir: dir,
+        },
+      });
+    }
+
+    // 4. Add Post paths
     for (const post of posts) {
       paths.push({
         params: { category, slug: post.id },
-        props: { post, meta },
+        props: { type: "post", meta, post },
       });
     }
   }
@@ -19,21 +66,202 @@ export async function getStaticPaths() {
   return paths;
 }
 
+const buildListItems = (
+  posts: any[],
+  activeDir: string,
+  categoryUrl: string,
+): ListItem[] => {
+  const directPosts: any[] = [];
+  const subdirGroups = new Map<string, any[]>();
+
+  posts.forEach((post) => {
+    const relativeId =
+      activeDir === "" ? post.id : post.id.slice(activeDir.length + 1);
+    const parts = relativeId.split("/");
+
+    if (parts.length === 1) {
+      directPosts.push(post);
+    } else {
+      const subdir = parts[0];
+      if (!subdirGroups.has(subdir)) {
+        subdirGroups.set(subdir, []);
+      }
+      subdirGroups.get(subdir)!.push(post);
+    }
+  });
+
+  const listItems: ListItem[] = directPosts.map((post) => ({
+    type: "post",
+    post,
+  }));
+
+  for (const [subdir, groupPosts] of subdirGroups.entries()) {
+    if (groupPosts.length === 1) {
+      // Promote single-post subdirs to standalone posts
+      listItems.push({ type: "post", post: groupPosts[0] });
+    } else {
+      // Create a series card for subdirs with multiple posts
+      const subdirPath = activeDir ? `${activeDir}/${subdir}` : subdir;
+      const subdirTitle = subdir
+        .replace(/-/g, " ")
+        .replace(/\b\w/g, (c) => c.toUpperCase()); // Capitalize words
+
+      listItems.push({
+        type: "series",
+        id: subdirPath,
+        title: subdirTitle,
+        description: `A collection on the topic of ${subdirTitle}.`,
+        postCount: groupPosts.length,
+        url: `${categoryUrl}/${subdirPath}/`,
+      });
+    }
+  }
+
+  // Sort them: series first (alphabetically), then posts by date descending
+  return listItems.sort((a, b) => {
+    if (a.type !== b.type) {
+      return a.type === "series" ? -1 : 1;
+    }
+    if (a.type === "series" && b.type === "series") {
+      return a.title.localeCompare(b.title);
+    }
+    return b.post.data.date.valueOf() - a.post.data.date.valueOf();
+  });
+};
+
 const { category } = Astro.params;
-const { post, meta } = Astro.props;
-const { Content, headings } = await render(post);
+const props = Astro.props as Props;
+const { type, meta } = props;
+
+let Content,
+  headings,
+  seriesPosts,
+  pageTitle,
+  listItems,
+  activeDir,
+  currentDirName;
+
+if (props.type === "post") {
+  const { post } = props;
+  const rendered = await render(post);
+  Content = rendered.Content;
+  headings = rendered.headings;
+
+  // Get the parent directory (series path) of this post
+  const pathParts = post.id.split("/");
+  pathParts.pop(); // remove filename
+  const seriesPath = pathParts.join("/");
+
+  // Get all posts in this collection to filter for the series
+  const allPosts = await getCollection(
+    meta.collection,
+    ({ data }: any) => !data.draft,
+  );
+  seriesPosts = seriesPath
+    ? allPosts
+        .filter((p: any) => {
+          const pParts = p.id.split("/");
+          pParts.pop();
+          return pParts.join("/") === seriesPath;
+        })
+        .sort((a: any, b: any) => a.data.date.valueOf() - b.data.date.valueOf())
+    : [];
+} else {
+  activeDir = props.activeDir;
+  listItems = buildListItems(props.posts, activeDir, `/${category}`);
+
+  // Format page title to reflect subdirectory nesting
+  pageTitle = activeDir
+    ? `${meta.title} / ${activeDir.replace(/\//g, " / ").replace(/-/g, " ")}`
+    : meta.title;
+
+  currentDirName = activeDir
+    ? activeDir
+        .split("/")
+        .pop()!
+        .replace(/-/g, " ")
+        .replace(/\b\w/g, (c) => c.toUpperCase())
+    : meta.title;
+}
 ---
 
-<PostLayout 
-  title={post.data.title} 
-  subtitle={post.data.subtitle}
-  author={post.data.author}
-  heroImage={post.data.heroImage}
-  description={post.data.description} 
-  date={post.data.date} 
-  category={meta.title}
-  categoryUrl={`/${category}`}
-  tags={post.data.tags} 
-  headings={headings}>
-  <Content />
-</PostLayout>
+{
+  type === "post" ? (
+    <PostLayout
+      title={Astro.props.post.data.title}
+      subtitle={Astro.props.post.data.subtitle}
+      author={Astro.props.post.data.author}
+      heroImage={Astro.props.post.data.heroImage}
+      description={Astro.props.post.data.description}
+      date={Astro.props.post.data.date}
+      category={meta.title}
+      categoryUrl={`/${category}`}
+      tags={Astro.props.post.data.tags}
+      headings={headings}
+      slug={Astro.props.post.id}
+      seriesPosts={seriesPosts}
+    >
+      <Content />
+    </PostLayout>
+  ) : (
+    <BaseLayout title={pageTitle} description={meta.description}>
+      <div class="category-container">
+        <div class="category-header">
+          <h1 class="category-subtitle">{meta.description.toUpperCase()}</h1>
+          <div class="breadcrumb-wrapper">
+            <Breadcrumb
+              category={meta.title}
+              categoryUrl={`/${category}`}
+              title={currentDirName}
+              slug={activeDir}
+            />
+          </div>
+        </div>
+        <div class="posts-grid-container">
+          <PostList items={listItems} />
+        </div>
+      </div>
+    </BaseLayout>
+  )
+}
+
+<style>
+  .category-container {
+    width: 100%;
+    margin-inline: auto;
+  }
+  .category-subtitle {
+    font-family: var(--font-label);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-muted);
+    margin-top: 0;
+    margin-bottom: var(--space-2);
+    line-height: var(--leading-body);
+    font-weight: 500;
+  }
+  .breadcrumb-wrapper {
+    width: 100%;
+  }
+  .category-header {
+    max-width: var(--measure-grid);
+    margin-inline: auto;
+    margin-bottom: var(--space-5);
+  }
+  .posts-grid-container {
+    max-width: var(--measure-grid);
+    margin-inline: auto;
+    margin-bottom: var(--space-8);
+  }
+
+  /* Scale up breathing room on larger screens */
+  @media (min-width: 64rem) {
+    .category-header {
+      margin-bottom: var(--space-6);
+    }
+    .posts-grid-container {
+      margin-bottom: var(--space-hero);
+    }
+  }
+</style>

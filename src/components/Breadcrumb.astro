@@ -3,16 +3,47 @@ interface Props {
   category: string;
   categoryUrl: string;
   title: string;
+  slug?: string;
 }
 
-const { category, categoryUrl, title } = Astro.props;
+const { category, categoryUrl, title, slug } = Astro.props;
+
+// Build segments if slug is nested
+const segments = slug ? slug.split('/') : [];
+const isNested = segments.length > 1;
+
+// The intermediate directory paths
+const intermediateBreadcrumbs = isNested
+  ? segments.slice(0, -1).map((segment, index) => {
+      const path = segments.slice(0, index + 1).join('/');
+      return {
+        label: segment.replace(/-/g, ' '),
+        url: `${categoryUrl}/${path}/`,
+      };
+    })
+  : [];
 ---
 
 <nav class="breadcrumb" id="breadcrumb-nav" aria-label="Breadcrumb">
   <span class="label glyph" aria-hidden="true">↳</span>
-  <a href={categoryUrl} class="label">{category}</a>
+  <a href="/" class="label">Home</a>
+  
   <span class="label divider" aria-hidden="true">/</span>
-  <span class="label current" aria-current="page">{title}</span>
+  {slug ? (
+    <>
+      <a href={categoryUrl} class="label">{category}</a>
+      
+      {intermediateBreadcrumbs.map((trail) => (
+        <span class="label divider" aria-hidden="true">/</span>
+        <a href={trail.url} class="label">{trail.label}</a>
+      ))}
+      
+      <span class="label divider" aria-hidden="true">/</span>
+      <span class="label current" aria-current="page">{title}</span>
+    </>
+  ) : (
+    <span class="label current" aria-current="page">{category}</span>
+  )}
 </nav>
 
 <script>
@@ -53,10 +84,10 @@ const { category, categoryUrl, title } = Astro.props;
     border: var(--border-thin) solid transparent; /* No visible border at rest to avoid layout jump */
 
     transition:
-      background-color 0.2s ease,
-      border-color 0.2s ease,
-      border-radius 0.2s ease,
-      box-shadow 0.2s ease;
+      background-color var(--transition-base),
+      border-color var(--transition-base),
+      border-radius var(--transition-base),
+      box-shadow var(--transition-base);
   }
 
   .breadcrumb.is-stuck {
@@ -65,12 +96,7 @@ const { category, categoryUrl, title } = Astro.props;
 
     /* Paper shadow and border on stick */
     box-shadow: var(--shadow-paper);
-    border: var(--border-thin) solid rgba(0, 0, 0, 0.04);
-  }
-
-  /* Dark mode paper styling for sticky state */
-  :global([data-theme="dark"]) .breadcrumb.is-stuck {
-    border: var(--border-thin) solid var(--color-border);
+    border: var(--border-thin) solid var(--color-card-border);
   }
 
   /* Match Mobile Edge-to-Edge */
@@ -102,13 +128,13 @@ const { category, categoryUrl, title } = Astro.props;
 
   .breadcrumb .glyph {
     color: var(--color-border);
-    font-size: 0.85rem; /* Slightly larger glyph */
+    font-size: var(--text-xs); /* Slightly larger than label micro size */
   }
 
   .breadcrumb a.label {
     color: var(--color-text-muted);
     text-decoration: none;
-    transition: color 0.15s ease;
+    transition: color var(--transition-fast);
     flex-shrink: 0; /* Category name shouldn't shrink */
   }
 

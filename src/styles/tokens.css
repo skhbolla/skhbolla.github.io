@@ -80,11 +80,15 @@
   /* Typography metrics */
   --leading-body: 1.8;
   --leading-tight: 1.25;
+  --leading-snug: 1.375;
   --tracking-tight: -0.02em;
   --tracking-wide: 0.04em;
   --tracking-normal: 0.01em;
+  --tracking-brand: -0.05em;  /* brand logotype condensed */
 
   /* Spacing rhythm */
+  --space-nano: 0.125rem;  /* 2px equivalent — sub-pixel gaps */
+  --space-micro: 0.25rem; /* 4px equivalent — badge padding */
   --space-1: 0.5rem;
   --space-2: 0.75rem;
   --space-3: 1rem;
@@ -93,11 +97,32 @@
   --space-6: 3rem;
   --space-7: 4.5rem;
   --space-8: 6rem;
+  --space-hero: 8rem;     /* xl-screen vertical breathing room */
 
   /* Layout boundaries */
   --measure: 52rem;
+  --measure-grid: 68rem;
   --scroll-padding: 5rem;
   --size-nav-btn: 1.75rem;
+
+  /* Card dimensions — post previews */
+  --card-size: 14rem;        /* ~224px — desktop/tablet */
+  --card-size-md: 11.5rem;   /* ~184px — medium mobile (40–64rem) */
+  --card-size-sm: 10.125rem; /* ~162px — small mobile */
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.2s ease;
+
+  /* Typographic details */
+  --underline-offset: 3px;
+  --tracking-header-divider: 0.2em;
+
+  /* Root font sizes for the dynamic scaling system */
+  --font-size-root: 16px;
+  --font-size-root-md: 15.5px; /* ≤ 64rem */
+  --font-size-root-sm: 15px;   /* ≤ 35rem */
+  --font-size-root-xl: 14.5px; /* ≥ 90rem */
 
   /* Form */
   --radius-sm: 2px;

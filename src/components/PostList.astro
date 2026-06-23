@@ -1,52 +1,362 @@
 ---
-import { formatDate } from '../utils/formatDate';
-import type { CollectionEntry } from 'astro:content';
+import { formatDate } from "../utils/formatDate";
 
-interface Props {
-  posts: CollectionEntry<'dsa' | 'mechSympathy' | 'systemDesign'>[];
-  basePath: string;
+export interface SeriesItem {
+  type: "series";
+  id: string;
+  title: string;
+  description: string;
+  postCount: number;
+  url: string;
 }
 
-const { posts, basePath } = Astro.props;
+export interface PostItem {
+  type: "post";
+  post: any;
+}
+
+export type ListItem = SeriesItem | PostItem;
+
+interface Props {
+  items: ListItem[];
+}
+
+const { items } = Astro.props;
+
+const collectionToCategory: Record<string, string> = {
+  dsa: "dsa",
+  mechSympathy: "mech-sympathy",
+  systemDesign: "system-design",
+};
 ---
 
-<ul class="post-list">
-  {posts.map((post) => (
-    <li>
-      <a href={`${basePath}/${post.id}/`}>{post.data.title}</a>
-      <time class="meta" datetime={post.data.date.toISOString()}>
-        {formatDate(post.data.date)}
-      </time>
-      <p>{post.data.description}</p>
-    </li>
-  ))}
+<ul class="post-grid">
+  {
+    items.map((item) => {
+      if (item.type === "series") {
+        return (
+          <li class="post-item">
+            <div class="series-stack">
+              <div class="back-card" />
+              <a href={item.url} class="post-card front-card">
+                <div class="card-meta">
+                  <span class="category-badge series-badge">Series</span>
+                  <span class="post-count">{item.postCount} parts</span>
+                </div>
+                <h3 class="card-title">{item.title}</h3>
+                <p class="card-description">{item.description}</p>
+                <div class="card-footer">
+                  <span class="read-link">
+                    Open Series <span class="arrow">↳</span>
+                  </span>
+                </div>
+              </a>
+            </div>
+          </li>
+        );
+      } else {
+        const { post } = item;
+        const categorySlug =
+          collectionToCategory[post.collection] || post.collection;
+        return (
+          <li class="post-item">
+            <a href={`/${categorySlug}/${post.id}/`} class="post-card">
+              <div class="card-meta">
+                <span class="category-badge">Post</span>
+                <time class="meta" datetime={post.data.date.toISOString()}>
+                  {formatDate(post.data.date)}
+                </time>
+              </div>
+              <h3 class="card-title">{post.data.title}</h3>
+              <p class="card-description">{post.data.description}</p>
+              <div class="card-footer">
+                <span class="read-link">
+                  Read Post <span class="arrow">↳</span>
+                </span>
+              </div>
+            </a>
+          </li>
+        );
+      }
+    })
+  }
 </ul>
 
 <style>
-  .post-list {
+  .post-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-4);
     list-style: none;
     padding: 0;
+    margin: 0;
+    width: 100%;
   }
-  .post-list li + li {
-    margin-top: var(--space-5);
+
+  /* Wider gap on desktop */
+  @media (min-width: 64rem) {
+    .post-grid {
+      gap: var(--space-5);
+    }
   }
-  .post-list a {
-    font-size: var(--text-lg);
+
+  .post-item {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    flex: 0 1 var(--card-size);
+    width: 100%;
+    max-width: var(--card-size);
+  }
+
+  /* Series stack and double card styles */
+  .series-stack {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1.35;
+  }
+
+  .back-card {
+    position: absolute;
+    inset: 0;
+    background: var(--color-paper);
+    border: var(--border-thin) solid var(--color-card-border);
+    box-shadow: var(--shadow-paper);
+    border-radius: var(--radius-sm);
+    transform: translate(4px, -4px) rotate(1.5deg);
+    z-index: 1;
+    transition: transform var(--transition-base);
+  }
+
+  .front-card {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+  }
+
+  /* Hover micro-animations */
+  .series-stack:hover .front-card {
+    transform: translateY(-3px) rotate(-0.5deg);
+    border-color: var(--color-accent);
+    box-shadow: var(--shadow-paper-hover);
+  }
+
+  .series-stack:hover .back-card {
+    transform: translate(7px, -7px) rotate(3deg);
+  }
+
+  .series-badge {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  .post-count {
+    font-family: var(--font-label);
+    font-size: var(--text-micro);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .post-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1 / 1.35;
+    background: var(--color-paper);
+    padding: var(--space-4) var(--space-4) var(--space-3);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-paper);
+    border: var(--border-thin) solid var(--color-card-border);
     text-decoration: none;
-    display: block;
-    margin-bottom: var(--space-1);
     color: var(--color-text);
+    overflow: hidden;
+    transition:
+      transform var(--transition-base),
+      box-shadow var(--transition-base),
+      border-color var(--transition-base);
   }
-  .post-list a:hover {
+
+  .post-card:not(.front-card):hover {
+    transform: translateY(-3px) scale(1.015);
+    border-color: var(--color-accent);
+    box-shadow: var(--shadow-paper-hover);
+  }
+
+  .card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-2);
+    width: 100%;
+  }
+
+  .category-badge {
+    font-family: var(--font-label);
+    font-size: var(--text-micro);
+    color: var(--color-text-muted);
+    border: var(--border-thin) solid var(--color-border);
+    padding: var(--space-nano) var(--space-micro);
+    border-radius: var(--radius-sm);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    transition:
+      border-color var(--transition-base),
+      color var(--transition-base);
+  }
+
+  .post-card:hover .category-badge {
+    border-color: var(--color-accent);
     color: var(--color-accent);
   }
-  .post-list .meta {
-    display: block;
+
+  .card-meta time {
+    font-size: var(--text-micro);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .card-title {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: var(--leading-tight);
+    font-weight: 500;
+    margin-top: 0;
+    margin-bottom: var(--space-1);
+    transition: color var(--transition-base);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .post-card:hover .card-title {
+    color: var(--color-accent);
+  }
+
+  .card-description {
+    font-size: var(--text-sm);
+    line-height: var(--leading-body);
+    color: var(--color-text);
+    margin: 0;
+    margin-bottom: var(--space-2);
+    flex-grow: 1;
+    text-align: justify;
+    hyphens: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: auto;
+  }
+
+  .read-link {
+    font-family: var(--font-label);
     font-size: var(--text-xs);
     color: var(--color-text-muted);
-    margin-bottom: var(--space-2);
+    transition: color var(--transition-base);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-nano);
   }
-  .post-list p {
-    margin: 0;
+
+  .post-card:hover .read-link {
+    color: var(--color-accent);
+  }
+
+  .arrow {
+    transition: transform var(--transition-base);
+  }
+
+  .post-card:hover .arrow {
+    transform: translate(2px, 2px);
+  }
+
+  /* ─── Tablet Overrides (40–64rem) ─── */
+  @media (max-width: 64rem) and (min-width: 40rem) {
+    .post-item {
+      flex: 0 1 var(--card-size-md);
+      max-width: var(--card-size-md);
+    }
+
+    .back-card {
+      transform: translate(3px, -3px) rotate(1.5deg);
+    }
+
+    .post-card {
+      padding: var(--space-3) var(--space-3) var(--space-2);
+    }
+
+    .card-title {
+      font-size: var(--text-sm);
+    }
+
+    .card-description {
+      -webkit-line-clamp: 3;
+    }
+  }
+
+  /* ─── Mobile Overrides (small mobile screens) ─── */
+  @media (max-width: 40rem) {
+    .post-item {
+      flex: 0 1 var(--card-size-sm);
+      max-width: var(--card-size-sm);
+    }
+
+    .back-card {
+      transform: translate(3px, -3px) rotate(1.5deg);
+    }
+
+    .series-stack:hover .front-card {
+      transform: translateY(-2px) rotate(-0.5deg);
+      border-color: var(--color-accent);
+      box-shadow: var(--shadow-paper-hover);
+    }
+
+    .series-stack:hover .back-card {
+      transform: translate(5px, -5px) rotate(3deg);
+    }
+
+    .post-card {
+      padding: var(--space-3) var(--space-3) var(--space-2);
+    }
+
+    .post-card:not(.front-card):hover {
+      transform: translateY(-2px) scale(1.01);
+    }
+
+    .card-meta {
+      margin-bottom: var(--space-2);
+    }
+
+    .category-badge {
+      padding: var(--space-nano) var(--space-micro);
+    }
+
+    .card-title {
+      font-size: var(--text-sm);
+      margin-bottom: var(--space-1);
+    }
+
+    .card-description {
+      font-size: var(--text-xs);
+      margin-bottom: var(--space-2);
+      -webkit-line-clamp: 3;
+    }
+
+    .read-link {
+      font-size: var(--text-micro);
+      gap: var(--space-nano);
+    }
   }
 </style>

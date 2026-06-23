@@ -12,7 +12,7 @@ html {
     Account for fixed header.
   */
   scroll-padding-top: var(--scroll-padding);
-  font-size: 16px;
+  font-size: var(--font-size-root);
   /* Default baseline */
 }
 
@@ -26,25 +26,25 @@ html {
 */
 @media (max-width: 64rem) {
   html {
-    font-size: 15.5px;
+    font-size: var(--font-size-root-md);
   }
 }
 
 @media (max-width: 35rem) {
   html {
-    font-size: 15px;
+    font-size: var(--font-size-root-sm);
   }
 }
 
 @media (min-width: 64rem) {
   html {
-    font-size: 16px;
+    font-size: var(--font-size-root);
   }
 }
 
 @media (min-width: 90rem) {
   html {
-    font-size: 14.5px;
+    font-size: var(--font-size-root-xl);
   }
 }
 
@@ -67,8 +67,8 @@ a {
   text-decoration-style: dotted;
   text-decoration-color: var(--color-border);
   text-decoration-thickness: var(--border-thin);
-  text-underline-offset: 3px;
-  transition: all 0.2s ease;
+  text-underline-offset: var(--underline-offset);
+  transition: all var(--transition-base);
 }
 
 a:hover {
@@ -83,7 +83,7 @@ main,
 }
 
 main {
-  padding-block: var(--space-6);
+  padding-block: var(--space-5);
   /* expands via media queries below */
 }
 
@@ -114,7 +114,7 @@ time,
   text-decoration-line: underline;
   text-decoration-style: dotted;
   text-decoration-thickness: var(--border-thick);
-  text-underline-offset: 3px;
+  text-underline-offset: var(--underline-offset);
 }
 
 /* ─── Prose ───────────────────────────────────────────────────────────────── */
@@ -158,12 +158,21 @@ time,
   hyphens: auto;
 }
 
-/* Links — adds font-weight and transition on top of the global a{} styles */
+/* Links — colored underline at rest (cobalt); more legible and accessible */
 .prose a {
   font-weight: 500;
-  transition: color 0.15s ease,
-    text-decoration-color 0.15s ease,
-    text-decoration-style 0.15s ease;
+  text-decoration-color: var(--color-link);
+  text-decoration-style: solid;
+  text-decoration-thickness: var(--border-thin);
+  text-underline-offset: var(--underline-offset);
+  transition:
+    color var(--transition-fast),
+    text-decoration-color var(--transition-fast);
+}
+
+.prose a:hover {
+  color: var(--color-link);
+  text-decoration-color: var(--color-link);
 }
 
 /* Blockquote */
@@ -266,24 +275,67 @@ html[data-theme='dark'] .prose .astro-code span {
   margin-inline: 0;
 }
 
+/* Figcaption — label voice, centered, muted */
+.prose figcaption {
+  font-family: var(--font-label);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-align: center;
+  margin-top: var(--space-2);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  line-height: var(--leading-snug);
+}
+
 /* ─── Responsive ──────────────────────────────────────────────────────────── */
-/* Mobile-first: main padding grows 1rem → 2rem → 3rem. */
+/*
+  Inline padding scales mobile-first in 4 stops.
+  Block padding stays at --space-5 on mobile, steps up with each breakpoint.
+*/
 
-/* ≥ 640px */
+/* ≥ 480px — larger phones, small tablets in landscape */
+@media (min-width: 30rem) {
+  main,
+  .responsive-padding {
+    padding-inline: var(--space-4);
+  }
+
+  main {
+    padding-block: var(--space-6);
+  }
+}
+
+/* ≥ 640px — tablets */
 @media (min-width: 40rem) {
-
   main,
   .responsive-padding {
     padding-inline: var(--space-5);
   }
+
+  main {
+    padding-block: var(--space-7);
+  }
 }
 
-/* ≥ 768px */
+/* ≥ 768px — large tablets / small desktops */
 @media (min-width: 48rem) {
-
   main,
   .responsive-padding {
     padding-inline: var(--space-6);
+  }
+}
+
+/* ≥ 1024px — proper desktops */
+@media (min-width: 64rem) {
+  main {
+    padding-block: var(--space-8);
+  }
+}
+
+/* ≥ 1440px — wide screens — let it breathe vertically */
+@media (min-width: 90rem) {
+  main {
+    padding-block: var(--space-hero);
   }
 }
 

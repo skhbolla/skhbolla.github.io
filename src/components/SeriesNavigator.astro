@@ -1,0 +1,97 @@
+---
+interface Props {
+  seriesPosts: any[];
+  slug: string;
+  categoryUrl: string;
+}
+
+const { seriesPosts, slug, categoryUrl } = Astro.props;
+---
+
+{seriesPosts && seriesPosts.length > 1 && (
+  <div class="series-navigator">
+    <div class="series-nav-title">
+      <span>Series Contents</span>
+    </div>
+    <ol class="series-nav-list">
+      {seriesPosts.map((p) => (
+        <li class={p.id === slug ? "active" : ""}>
+          {p.id === slug ? (
+            <span>
+              {p.data.title}{" "}
+              <span class="current-badge">(You are here)</span>
+            </span>
+          ) : (
+            <a href={`${categoryUrl}/${p.id}/`}>{p.data.title}</a>
+          )}
+        </li>
+      ))}
+    </ol>
+  </div>
+)}
+
+<style>
+  .series-navigator {
+    background: var(--color-bg-raised);
+    border: var(--border-thin) solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: var(--space-3) var(--space-4);
+    margin-top: var(--space-5);
+    margin-bottom: var(--space-5);
+    font-size: var(--text-sm);
+  }
+
+  @media (min-width: 48rem) {
+    .series-navigator {
+      padding: var(--space-4) var(--space-5);
+      margin-top: var(--space-6);
+      margin-bottom: var(--space-6);
+    }
+  }
+
+  .series-nav-title {
+    font-family: var(--font-label);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    border-bottom: var(--border-thin) dotted var(--color-border);
+    padding-bottom: var(--space-2);
+    margin-bottom: var(--space-3);
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .series-nav-list {
+    margin: 0;
+    padding-left: var(--space-4);
+  }
+
+  .series-nav-list li {
+    line-height: var(--leading-body);
+    margin-bottom: var(--space-1);
+  }
+
+  .series-nav-list li.active {
+    color: var(--color-text);
+    font-weight: 500;
+  }
+
+  .series-nav-list a {
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .series-nav-list a:hover {
+    color: var(--color-text);
+    text-decoration: underline;
+    text-decoration-style: dotted;
+  }
+
+  .current-badge {
+    font-family: var(--font-label);
+    font-size: var(--text-micro);
+    color: var(--color-text-muted);
+    margin-left: var(--space-2);
+    text-transform: uppercase;
+  }
+</style>

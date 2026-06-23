@@ -25,4 +25,9 @@ export const collections = {
     loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/mech-sympathy' }),
     schema: postSchema,
   }),
+
+  systemDesign: defineCollection({
+    loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/system-design' }),
+    schema: postSchema,
+  }),
 };

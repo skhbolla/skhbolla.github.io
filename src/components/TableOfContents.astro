@@ -7,7 +7,14 @@ const { headings } = Astro.props;
 ---
 
 <button id="toc-toggle" class="toc-toggle" aria-label="Table of Contents">
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+  >
     <line x1="3" y1="12" x2="21" y2="12"></line>
     <line x1="3" y1="6" x2="21" y2="6"></line>
     <line x1="3" y1="18" x2="21" y2="18"></line>
@@ -17,8 +24,19 @@ const { headings } = Astro.props;
 <aside id="toc-sidebar" class="toc-sidebar">
   <div class="toc-header">
     <span class="label">Contents</span>
-    <button id="toc-close" class="toc-close" aria-label="Close Table of Contents">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <button
+      id="toc-close"
+      class="toc-close"
+      aria-label="Close Table of Contents"
+    >
+      <svg
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
         <line x1="18" y1="6" x2="6" y2="18"></line>
         <line x1="6" y1="6" x2="18" y2="18"></line>
       </svg>
@@ -26,11 +44,17 @@ const { headings } = Astro.props;
   </div>
   <nav class="toc-nav">
     <ul>
-      {headings.filter(h => h.depth > 1 && h.depth < 4).map(heading => (
-        <li class={`depth-${heading.depth}`}>
-          <a href={`#${heading.slug}`} data-toc-link>{heading.text}</a>
-        </li>
-      ))}
+      {
+        headings
+          .filter((h) => h.depth > 1 && h.depth < 4)
+          .map((heading) => (
+            <li class={`depth-${heading.depth}`}>
+              <a href={`#${heading.slug}`} data-toc-link>
+                {heading.text}
+              </a>
+            </li>
+          ))
+      }
     </ul>
   </nav>
 </aside>
@@ -47,11 +71,11 @@ const { headings } = Astro.props;
     top: calc(var(--space-6) + var(--space-4));
     max-height: calc(100vh - var(--space-6) * 2);
     overflow-y: auto;
-    font-size: 0.75rem; /* tiny text */
+    font-size: var(--text-xs); /* tiny text */
     font-family: var(--font-label);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    scrollbar-width: none; 
+    letter-spacing: var(--tracking-wide);
+    scrollbar-width: none;
     -ms-overflow-style: none;
   }
   .toc-sidebar::-webkit-scrollbar {
@@ -66,8 +90,8 @@ const { headings } = Astro.props;
     list-style: none;
     padding: 0;
     margin: 0;
-    border-left: 1px solid var(--color-border);
-    margin-left: 1px;
+    border-left: var(--border-thin) solid var(--color-border);
+    margin-left: var(--border-thin);
   }
 
   .toc-nav li {
@@ -81,19 +105,24 @@ const { headings } = Astro.props;
   .toc-nav a {
     color: var(--color-text-muted);
     text-decoration: none;
-    transition: color 0.15s ease, font-weight 0.15s ease;
+    transition:
+      color 0.15s ease,
+      font-weight 0.15s ease;
     display: block;
     padding-left: var(--space-3);
-    margin-left: -1px; /* overlap the border */
-    border-left: 1px solid transparent;
+    margin-left: calc(var(--border-thin) * -1); /* overlap the border */
+    border-left: var(--border-thin) solid transparent;
     opacity: 0.7;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
   }
 
   .toc-nav a:hover {
     color: var(--color-text);
     opacity: 1;
   }
-  
+
   .toc-nav a.active {
     color: var(--color-accent);
     border-left-color: var(--color-accent);
@@ -112,14 +141,14 @@ const { headings } = Astro.props;
       bottom: var(--space-4);
       left: var(--space-4);
       background: var(--color-bg-raised);
-      border: 1px solid var(--color-border);
-      border-radius: 50%;
-      width: 3rem;
-      height: 3rem;
+      border: var(--border-thin) solid var(--color-border);
+      border-radius: var(--radius-full);
+      width: var(--space-6);
+      height: var(--space-6);
       align-items: center;
       justify-content: center;
       z-index: 40;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: var(--shadow-paper);
       color: var(--color-text);
       cursor: pointer;
     }
@@ -137,7 +166,7 @@ const { headings } = Astro.props;
       padding: var(--space-4);
       transform: translateX(-100%);
       transition: transform 0.3s ease;
-      border-right: 1px solid var(--color-border);
+      border-right: var(--border-thin) solid var(--color-border);
     }
 
     .toc-sidebar.open {
@@ -150,7 +179,7 @@ const { headings } = Astro.props;
       align-items: center;
       margin-bottom: var(--space-4);
       padding-bottom: var(--space-2);
-      border-bottom: 1px solid var(--color-border);
+      border-bottom: var(--border-thin) solid var(--color-border);
     }
 
     .toc-close {
@@ -165,7 +194,7 @@ const { headings } = Astro.props;
       display: block;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0, 0, 0, 0.5);
       z-index: 45;
       opacity: 0;
       pointer-events: none;
@@ -181,58 +210,62 @@ const { headings } = Astro.props;
 
 <script>
   // Mobile Drawer Logic
-  const toggle = document.getElementById('toc-toggle');
-  const close = document.getElementById('toc-close');
-  const sidebar = document.getElementById('toc-sidebar');
-  const backdrop = document.getElementById('toc-backdrop');
-  
+  const toggle = document.getElementById("toc-toggle");
+  const close = document.getElementById("toc-close");
+  const sidebar = document.getElementById("toc-sidebar");
+  const backdrop = document.getElementById("toc-backdrop");
+
   function openToc() {
-    sidebar?.classList.add('open');
-    backdrop?.classList.add('open');
-    document.body.style.overflow = 'hidden';
+    sidebar?.classList.add("open");
+    backdrop?.classList.add("open");
+    document.body.style.overflow = "hidden";
   }
-  
+
   function closeToc() {
-    sidebar?.classList.remove('open');
-    backdrop?.classList.remove('open');
-    document.body.style.overflow = '';
+    sidebar?.classList.remove("open");
+    backdrop?.classList.remove("open");
+    document.body.style.overflow = "";
   }
 
-  toggle?.addEventListener('click', openToc);
-  close?.addEventListener('click', closeToc);
-  backdrop?.addEventListener('click', closeToc);
+  toggle?.addEventListener("click", openToc);
+  close?.addEventListener("click", closeToc);
+  backdrop?.addEventListener("click", closeToc);
 
-  const links = sidebar?.querySelectorAll('a');
-  links?.forEach(link => {
-    link.addEventListener('click', closeToc);
+  const links = sidebar?.querySelectorAll("a");
+  links?.forEach((link) => {
+    link.addEventListener("click", closeToc);
   });
 
   // Intersection Observer for highlighting active section
   const observerOptions = {
     root: null,
-    rootMargin: '-20% 0px -80% 0px', // triggers when heading hits the top 20%
-    threshold: 1.0
+    rootMargin: "-20% 0px -80% 0px", // triggers when heading hits the top 20%
+    threshold: 1.0,
   };
 
   const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
+    entries.forEach((entry) => {
       if (entry.isIntersecting) {
         // Remove active from all
-        document.querySelectorAll('[data-toc-link]').forEach(link => {
-          link.classList.remove('active');
+        document.querySelectorAll("[data-toc-link]").forEach((link) => {
+          link.classList.remove("active");
         });
         // Add active to current
-        const id = entry.target.getAttribute('id');
-        const activeLink = document.querySelector(`[data-toc-link][href="#${id}"]`);
+        const id = entry.target.getAttribute("id");
+        const activeLink = document.querySelector(
+          `[data-toc-link][href="#${id}"]`,
+        );
         if (activeLink) {
-          activeLink.classList.add('active');
+          activeLink.classList.add("active");
         }
       }
     });
   }, observerOptions);
 
   // Observe all headings that have an ID
-  document.querySelectorAll('article h2[id], article h3[id]').forEach((section) => {
-    observer.observe(section);
-  });
+  document
+    .querySelectorAll("article h2[id], article h3[id]")
+    .forEach((section) => {
+      observer.observe(section);
+    });
 </script>

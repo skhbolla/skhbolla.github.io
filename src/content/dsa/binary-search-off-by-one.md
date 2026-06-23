@@ -30,6 +30,7 @@ def search(arr, target):
     return -1
 ```
 
+
 This is a plain `.md` post — no interactive diagram needed here, just text
 and code. Compare this to the mechanical sympathy posts, where the `.mdx`
 posts pull in actual diagram components.

@@ -8,7 +8,42 @@
 html {
   color-scheme: light dark;
   scroll-behavior: smooth;
-  scroll-padding-top: 5rem;
+  /* 
+    Account for fixed header.
+  */
+  scroll-padding-top: var(--scroll-padding);
+  font-size: 16px; /* Default baseline */
+}
+
+/* 
+  Dynamic Root Scaling:
+  Because the entire token system (typography, measure, padding) is built on `rem`, 
+  we can proportionally scale the entire site UI flawlessly just by tweaking the root font-size.
+  
+  - On large screens, we scale DOWN to increase negative space on the margins.
+  - On small screens, we scale DOWN to compress massive spacing blocks and free up content real estate.
+*/
+@media (max-width: 48rem) {
+  html {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 35rem) {
+  html {
+    font-size: 14px;
+  }
+}
+@media (min-width: 64rem) {
+  html {
+    font-size: 15.2px;
+  }
+}
+
+@media (min-width: 90rem) {
+  html {
+    font-size: 14.5px;
+  }
 }
 
 body {
@@ -28,9 +63,10 @@ a {
   color: inherit;
   text-decoration: underline;
   text-decoration-style: dotted;
-  text-decoration-color: var(--color-text-muted);
-  text-decoration-thickness: 1px;
+  text-decoration-color: var(--color-border);
+  text-decoration-thickness: var(--border-thin);
   text-underline-offset: 3px;
+  transition: all 0.2s ease;
 }
 
 a:hover {
@@ -53,7 +89,8 @@ code,
 pre,
 kbd {
   font-family: var(--font-code);
-  letter-spacing: 0.01em;
+  font-weight: 400;
+  letter-spacing: var(--tracking-normal);
 }
 
 /* Label voice — Departure Mono uppercase for nav, dates, meta, captions */
@@ -64,7 +101,7 @@ time,
 .byline {
   font-family: var(--font-label);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: var(--tracking-wide);
 }
 
 /* ─── Selection ───────────────────────────────────────────────────────────── */
@@ -73,7 +110,7 @@ time,
   background-color: var(--color-highlight-bg);
   text-decoration-line: underline;
   text-decoration-style: dotted;
-  text-decoration-thickness: 2px;
+  text-decoration-thickness: var(--border-thick);
   text-underline-offset: 3px;
 }
 
@@ -82,8 +119,7 @@ time,
 .prose {
   max-width: var(--measure);
   margin-inline: auto;
-  font-size: var(--text-sm);
-  /* 14px editorial size */
+  font-size: var(--text-base);
 }
 
 .prose>*+* {
@@ -130,8 +166,8 @@ time,
 /* Blockquote */
 .prose blockquote {
   margin: var(--space-4) 0;
-  padding-left: var(--space-3);
-  border-left: 2px solid var(--color-border);
+  padding-left: var(--space-4);
+  border-left: var(--border-thick) solid var(--color-border);
   color: var(--color-text-muted);
 }
 
@@ -159,16 +195,17 @@ time,
 /* Horizontal rule */
 .prose hr {
   border: none;
-  border-top: 1px solid var(--color-border);
+  border-top: var(--border-thin) solid var(--color-border);
   margin: var(--space-6) 0;
 }
 
 /* Code */
-.prose code {
+.prose code,
+.prose kbd {
   background: var(--color-code-bg);
   border-radius: var(--radius-base);
-  padding: 0.15em 0.4em;
-  font-size: 0.9em;
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--text-xs);
 }
 
 .prose pre {
@@ -212,8 +249,8 @@ html[data-theme='dark'] .prose .astro-code span {
 .prose th,
 .prose td {
   text-align: left;
-  padding: var(--space-1) var(--space-2);
-  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-2);
+  border-bottom: var(--border-thin) solid var(--color-border);
 }
 
 /* Images and figures */

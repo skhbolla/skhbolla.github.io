@@ -5,7 +5,7 @@ interface Props {
   image?: string;
 }
 
-const { title, description, image = '/placeholder-social.jpg' } = Astro.props;
+const { title, description, image = "/placeholder-social.jpg" } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
@@ -37,12 +37,26 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 <meta property="twitter:image" content={new URL(image, Astro.url)} />
 
 <!-- Font preloads -->
-<link rel="preload" href="/fonts/DepartureMono-Regular.woff2" as="font" type="font/woff2" crossorigin />
-<link rel="preload" href="/fonts/Newsreader-Variable.woff2" as="font" type="font/woff2" crossorigin />
+<link
+  rel="preload"
+  href="/fonts/DepartureMono-Regular.woff2"
+  as="font"
+  type="font/woff2"
+  crossorigin
+/>
+<link
+  rel="preload"
+  href="/fonts/Newsreader-Variable.woff2"
+  as="font"
+  type="font/woff2"
+  crossorigin
+/>
 
 <!-- Theme Script -->
 <script is:inline>
-  const saved = localStorage.getItem('theme');
-  const theme = saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  const saved = localStorage.getItem("theme");
+  const theme =
+    saved ||
+    (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
   document.documentElement.dataset.theme = theme;
 </script>

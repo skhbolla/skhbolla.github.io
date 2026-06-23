@@ -8,28 +8,91 @@ interface Props {
 const { category, categoryUrl, title } = Astro.props;
 ---
 
-<div class="breadcrumb">
+<nav class="breadcrumb" id="breadcrumb-nav" aria-label="Breadcrumb">
+  <span class="label glyph" aria-hidden="true">↳</span>
   <a href={categoryUrl} class="label">{category}</a>
-  <span class="label divider">/</span>
-  <span class="label current">{title}</span>
-</div>
+  <span class="label divider" aria-hidden="true">/</span>
+  <span class="label current" aria-current="page">{title}</span>
+</nav>
+
+<script>
+  const setupObserver = () => {
+    const el = document.getElementById('breadcrumb-nav');
+    if (!el) return;
+    
+    // threshold: [1] triggers when the element is less than 100% visible
+    const observer = new IntersectionObserver(
+      ([e]) => el.classList.toggle('is-stuck', e.intersectionRatio < 1),
+      { threshold: [1], rootMargin: "0px 0px 0px 0px" }
+    );
+    observer.observe(el);
+  };
+  
+  setupObserver();
+  document.addEventListener('astro:page-load', setupObserver);
+</script>
 
 <style>
   .breadcrumb {
-    margin-bottom: var(--space-3);
+    margin-bottom: var(--space-4); /* Added spacing back */
     display: flex;
     align-items: center;
     gap: var(--space-2);
     flex-wrap: nowrap;
     min-width: 0;
+    
+    position: sticky;
+    top: -1px;
+    z-index: 40;
+    
+    background-color: var(--color-bg);
+    padding: var(--space-2) var(--space-3);
+    padding-top: calc(var(--space-2) + 1px); /* Compensate for top: -1px */
+    
+    border-radius: var(--radius-sm);
+    border: var(--border-thin) solid transparent; /* No visible border at rest to avoid layout jump */
+    
+    transition: background-color 0.2s ease, border-color 0.2s ease, border-radius 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .breadcrumb.is-stuck {
+    backdrop-filter: blur(var(--blur-md));
+    background-color: var(--color-paper-glass);
+    
+    /* Paper shadow and border on stick */
+    box-shadow: var(--shadow-paper);
+    border: var(--border-thin) solid rgba(0, 0, 0, 0.04);
+  }
+
+  /* Dark mode paper styling for sticky state */
+  :global([data-theme="dark"]) .breadcrumb.is-stuck {
+    border: var(--border-thin) solid var(--color-border);
+  }
+
+  /* Match Mobile Edge-to-Edge */
+  @media (max-width: 48rem) {
+    .breadcrumb {
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+    }
+    .breadcrumb.is-stuck {
+      border-radius: 0;
+    }
   }
 
   .breadcrumb .label {
-    font-size: 0.6875rem; /* 11px */
+    font-size: var(--text-micro);
+    letter-spacing: var(--tracking-tight);
     margin: 0;
     line-height: 1;
     color: var(--color-text-muted);
     white-space: nowrap;
+  }
+
+  .breadcrumb .glyph {
+    color: var(--color-border);
+    font-size: 0.85rem; /* Slightly larger glyph */
   }
 
   .breadcrumb a.label {

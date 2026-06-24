@@ -1,7 +1,7 @@
 ---
 interface Props {
-  seriesPosts: any[];
-  slug: string;
+  seriesPosts?: any[];
+  slug?: string;
   categoryUrl: string;
 }
 
@@ -83,8 +83,6 @@ const { seriesPosts, slug, categoryUrl } = Astro.props;
 
   .series-nav-list a:hover {
     color: var(--color-text);
-    text-decoration: underline;
-    text-decoration-style: dotted;
   }
 
   .current-badge {

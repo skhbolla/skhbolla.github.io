@@ -9,58 +9,138 @@ interface Props {
 const { category, categoryUrl, title, slug } = Astro.props;
 
 // Build segments if slug is nested
-const segments = slug ? slug.split('/') : [];
+const segments = slug ? slug.split("/") : [];
 const isNested = segments.length > 1;
 
 // The intermediate directory paths
 const intermediateBreadcrumbs = isNested
   ? segments.slice(0, -1).map((segment, index) => {
-      const path = segments.slice(0, index + 1).join('/');
+      const path = segments.slice(0, index + 1).join("/");
       return {
-        label: segment.replace(/-/g, ' '),
+        label: segment.replace(/-/g, " "),
         url: `${categoryUrl}/${path}/`,
       };
     })
   : [];
+
+function truncate(str: string) {
+  return str.length > 15 ? str.substring(0, 15).trim() + "..." : str;
+}
 ---
 
 <nav class="breadcrumb" id="breadcrumb-nav" aria-label="Breadcrumb">
   <span class="label glyph" aria-hidden="true">↳</span>
   <a href="/" class="label">Home</a>
-  
+
   <span class="label divider" aria-hidden="true">/</span>
-  {slug ? (
-    <>
-      <a href={categoryUrl} class="label">{category}</a>
-      
-      {intermediateBreadcrumbs.map((trail) => (
-        <span class="label divider" aria-hidden="true">/</span>
-        <a href={trail.url} class="label">{trail.label}</a>
-      ))}
-      
-      <span class="label divider" aria-hidden="true">/</span>
-      <span class="label current" aria-current="page">{title}</span>
-    </>
-  ) : (
-    <span class="label current" aria-current="page">{category}</span>
-  )}
+  {
+    slug ? (
+      <>
+        <a href={categoryUrl} class="label" title={category}>
+          {truncate(category)}
+        </a>
+
+        {intermediateBreadcrumbs.map((trail) => (
+          <>
+            <span class="label divider" aria-hidden="true">
+              /
+            </span>
+            <a href={trail.url} class="label" title={trail.label}>
+              {truncate(trail.label)}
+            </a>
+          </>
+        ))}
+
+        <span class="label divider" aria-hidden="true">
+          /
+        </span>
+        <span class="label current" aria-current="page" title={title}>
+          {truncate(title)}
+        </span>
+      </>
+    ) : (
+      <span class="label current" aria-current="page" title={category}>
+        {truncate(category)}
+      </span>
+    )
+  }
 </nav>
 
 <script>
-  const setupObserver = () => {
+  let docClickListener: (e: MouseEvent) => void;
+  let resizeListener: () => void;
+
+  const setupBreadcrumb = () => {
     const el = document.getElementById("breadcrumb-nav");
     if (!el) return;
 
-    // threshold: [1] triggers when the element is less than 100% visible
+    // Sticky observer
     const observer = new IntersectionObserver(
       ([e]) => el.classList.toggle("is-stuck", e.intersectionRatio < 1),
       { threshold: [1], rootMargin: "0px 0px 0px 0px" },
     );
     observer.observe(el);
+
+    // Expandable check
+    const currentEl = el.querySelector(".current");
+    const checkExpandable = () => {
+      // Temporarily remove expanded class to measure natural collapsed width
+      const wasExpanded = el.classList.contains("is-expanded");
+      if (wasExpanded) el.classList.remove("is-expanded");
+
+      const isOverflowing =
+        el.scrollWidth > el.clientWidth ||
+        (currentEl && currentEl.scrollWidth > currentEl.clientWidth);
+
+      el.classList.toggle("is-expandable", !!isOverflowing);
+
+      if (wasExpanded) el.classList.add("is-expanded");
+    };
+
+    if (resizeListener) {
+      window.removeEventListener("resize", resizeListener);
+    }
+    resizeListener = () => checkExpandable();
+    window.addEventListener("resize", resizeListener, { passive: true });
+
+    // Initial check
+    checkExpandable();
+
+    // Expand/Collapse logic
+    el.addEventListener("click", (e) => {
+      const target = e.target as HTMLElement;
+      const isExpanded = el.classList.contains("is-expanded");
+      const isExpandable = el.classList.contains("is-expandable");
+      const link = target.closest("a");
+
+      if (!isExpanded) {
+        if (isExpandable) {
+          // If we have hidden content, clicking anywhere expands it instead of navigating
+          if (link) e.preventDefault();
+          el.classList.add("is-expanded");
+        }
+      } else {
+        // If expanded and clicking a link, let the browser navigate
+        if (link) return;
+        el.classList.remove("is-expanded");
+      }
+    });
+
+    if (docClickListener) {
+      document.removeEventListener("click", docClickListener);
+    }
+
+    docClickListener = (e: MouseEvent) => {
+      if (!el.contains(e.target as Node)) {
+        el.classList.remove("is-expanded");
+      }
+    };
+
+    document.addEventListener("click", docClickListener);
   };
 
-  setupObserver();
-  document.addEventListener("astro:page-load", setupObserver);
+  setupBreadcrumb();
+  document.addEventListener("astro:page-load", setupBreadcrumb);
 </script>
 
 <style>
@@ -68,8 +148,12 @@ const intermediateBreadcrumbs = isNested
     margin-bottom: var(--space-1);
     display: flex;
     align-items: center;
-    gap: var(--space-2);
+    column-gap: var(--space-2);
+    row-gap: var(--space-1);
+
+    /* Default: 1 line */
     flex-wrap: nowrap;
+    overflow: hidden;
     min-width: 0;
 
     position: sticky;
@@ -78,10 +162,10 @@ const intermediateBreadcrumbs = isNested
 
     background-color: var(--color-bg);
     padding: var(--space-2) var(--space-3);
-    padding-top: calc(var(--space-2) + 1px); /* Compensate for top: -1px */
+    padding-top: calc(var(--space-2) + 1px);
 
     border-radius: var(--radius-sm);
-    border: var(--border-thin) solid transparent; /* No visible border at rest to avoid layout jump */
+    border: var(--border-thin) solid transparent;
 
     transition:
       background-color var(--transition-base),
@@ -90,16 +174,28 @@ const intermediateBreadcrumbs = isNested
       box-shadow var(--transition-base);
   }
 
+  /* Only show pointer when there's actually hidden content to reveal */
+  .breadcrumb.is-expandable:not(.is-expanded) {
+    cursor: pointer;
+  }
+
+  .breadcrumb.is-expandable:not(.is-expanded) a.label {
+    cursor: pointer;
+  }
+
+  /* Expanded state */
+  .breadcrumb.is-expanded {
+    flex-wrap: wrap;
+    cursor: default;
+  }
+
   .breadcrumb.is-stuck {
     backdrop-filter: blur(var(--blur-md));
     background-color: var(--color-paper-glass);
-
-    /* Paper shadow and border on stick */
     box-shadow: var(--shadow-paper);
     border: var(--border-thin) solid var(--color-card-border);
   }
 
-  /* Match Mobile Edge-to-Edge */
   @media (max-width: 48rem) {
     .breadcrumb {
       border-radius: 0;
@@ -115,27 +211,22 @@ const intermediateBreadcrumbs = isNested
     font-size: var(--text-micro);
     letter-spacing: var(--tracking-tight);
     margin: 0;
-    line-height: 1;
+    line-height: 1.5;
     color: var(--color-text-muted);
     white-space: nowrap;
   }
 
-  @media (max-width: 90rem) {
-    .breadcrumb .label {
-      font-size: var(--text-xs);
-    }
-  }
-
   .breadcrumb .glyph {
     color: var(--color-border);
-    font-size: var(--text-xs); /* Slightly larger than label micro size */
+    font-size: var(--text-xs);
+    flex-shrink: 0;
   }
 
   .breadcrumb a.label {
     color: var(--color-text-muted);
     text-decoration: none;
     transition: color var(--transition-fast);
-    flex-shrink: 0; /* Category name shouldn't shrink */
+    flex-shrink: 0; /* Keep links from shrinking when collapsed */
   }
 
   .breadcrumb a.label:hover {
@@ -148,9 +239,15 @@ const intermediateBreadcrumbs = isNested
 
   .breadcrumb .current {
     color: var(--color-text);
+    display: block;
+    /* When collapsed, let the current item take the overflow hit */
     overflow: hidden;
     text-overflow: ellipsis;
-    min-width: 0; /* Allows flex child to truncate properly */
-    display: block;
+    min-width: 0;
+  }
+
+  .breadcrumb.is-expanded .current {
+    overflow: visible;
+    text-overflow: clip;
   }
 </style>

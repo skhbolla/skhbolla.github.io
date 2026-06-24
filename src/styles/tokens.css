@@ -89,6 +89,7 @@
   /* Spacing rhythm */
   --space-nano: 0.125rem;  /* 2px equivalent — sub-pixel gaps */
   --space-micro: 0.25rem; /* 4px equivalent — badge padding */
+  --space-stack: 0.25rem; /* 4px — card stack offset base unit */
   --space-1: 0.5rem;
   --space-2: 0.75rem;
   --space-3: 1rem;

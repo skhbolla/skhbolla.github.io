@@ -21,13 +21,17 @@ interface Props {
   items: ListItem[];
 }
 
+import { CATEGORY_MAP } from "../utils/categories";
+
 const { items } = Astro.props;
 
-const collectionToCategory: Record<string, string> = {
-  dsa: "dsa",
-  mechSympathy: "mech-sympathy",
-  systemDesign: "system-design",
-};
+// Dynamically resolve category slug from the collection name
+function getCategorySlug(collectionName: string): string {
+  const entry = Object.entries(CATEGORY_MAP).find(
+    ([_, meta]) => meta.collection === collectionName
+  );
+  return entry ? entry[0] : collectionName;
+}
 ---
 
 <ul class="post-grid">
@@ -56,8 +60,7 @@ const collectionToCategory: Record<string, string> = {
         );
       } else {
         const { post } = item;
-        const categorySlug =
-          collectionToCategory[post.collection] || post.collection;
+        const categorySlug = getCategorySlug(post.collection);
         return (
           <li class="post-item">
             <a href={`/${categorySlug}/${post.id}/`} class="post-card">
@@ -124,7 +127,8 @@ const collectionToCategory: Record<string, string> = {
     border: var(--border-thin) solid var(--color-card-border);
     box-shadow: var(--shadow-paper);
     border-radius: var(--radius-sm);
-    transform: translate(4px, -4px) rotate(1.5deg);
+    /* Stack offset: 4px right, 4px up */
+    transform: translate(var(--space-stack), calc(-1 * var(--space-stack))) rotate(1.5deg);
     z-index: 1;
     transition: transform var(--transition-base);
   }
@@ -143,11 +147,14 @@ const collectionToCategory: Record<string, string> = {
   }
 
   .series-stack:hover .back-card {
-    transform: translate(7px, -7px) rotate(3deg);
+    /* Expanded offset on hover: 7px ≈ space-stack * 1.75 */
+    transform: translate(calc(var(--space-stack) * 1.75), calc(-1 * var(--space-stack) * 1.75)) rotate(3deg);
   }
 
   .series-badge {
-    color: var(--color-accent);
+    /* Splash of color: Solid Cobalt for Series */
+    background: var(--color-accent);
+    color: var(--color-bg);
     border-color: var(--color-accent);
   }
 
@@ -196,26 +203,29 @@ const collectionToCategory: Record<string, string> = {
   .category-badge {
     font-family: var(--font-label);
     font-size: var(--text-micro);
-    color: var(--color-text-muted);
-    border: var(--border-thin) solid var(--color-border);
+    /* Splash of color: Amber highlight for posts */
+    background: var(--color-highlight-bg);
+    color: var(--color-highlight-text);
+    border: var(--border-thin) solid transparent;
     padding: var(--space-nano) var(--space-micro);
     border-radius: var(--radius-sm);
     text-transform: uppercase;
     letter-spacing: var(--tracking-wide);
     transition:
+      background var(--transition-base),
       border-color var(--transition-base),
       color var(--transition-base);
   }
 
   .post-card:hover .category-badge {
     border-color: var(--color-accent);
+    background: var(--color-bg);
     color: var(--color-accent);
   }
 
   .card-meta time {
     font-size: var(--text-micro);
     color: var(--color-text-muted);
-    margin: 0;
   }
 
   .card-title {
@@ -290,7 +300,8 @@ const collectionToCategory: Record<string, string> = {
     }
 
     .back-card {
-      transform: translate(3px, -3px) rotate(1.5deg);
+      /* Tighter offset on tablet: 3px ≈ space-stack * 0.75 */
+      transform: translate(calc(var(--space-stack) * 0.75), calc(-1 * var(--space-stack) * 0.75)) rotate(1.5deg);
     }
 
     .post-card {
@@ -314,7 +325,8 @@ const collectionToCategory: Record<string, string> = {
     }
 
     .back-card {
-      transform: translate(3px, -3px) rotate(1.5deg);
+      /* Same tighter offset on mobile */
+      transform: translate(calc(var(--space-stack) * 0.75), calc(-1 * var(--space-stack) * 0.75)) rotate(1.5deg);
     }
 
     .series-stack:hover .front-card {
@@ -324,7 +336,8 @@ const collectionToCategory: Record<string, string> = {
     }
 
     .series-stack:hover .back-card {
-      transform: translate(5px, -5px) rotate(3deg);
+      /* Mobile hover: 5px ≈ space-stack * 1.25 */
+      transform: translate(calc(var(--space-stack) * 1.25), calc(-1 * var(--space-stack) * 1.25)) rotate(3deg);
     }
 
     .post-card {

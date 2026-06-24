@@ -1,60 +1,126 @@
 ---
 import { getCollection, render } from "astro:content";
+import type { CollectionEntry } from "astro:content";
 import PostLayout from "../../layouts/PostLayout.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PostList from "../../components/PostList.astro";
 import type { ListItem } from "../../components/PostList.astro";
 import { CATEGORY_MAP } from "../../utils/categories";
+import type { CollectionName, CategoryMeta } from "../../utils/categories";
 import Breadcrumb from "../../components/Breadcrumb.astro";
 
-type Props = 
-  | { type: 'post'; meta: any; post: any }
-  | { type: 'directory'; meta: any; posts: any[]; activeDir: string };
+// ─── Types ────────────────────────────────────────────────────────────────────
+//
+// CollectionName and CategoryMeta are derived from CATEGORY_MAP in
+// categories.ts — no collection names are hardcoded here. Adding a new
+// category means touching categories.ts only.
+
+type AnyPost = { [K in CollectionName]: CollectionEntry<K> }[CollectionName];
+
+type PostProps      = { type: "post";      meta: CategoryMeta; post: AnyPost };
+type DirectoryProps = { type: "directory"; meta: CategoryMeta; posts: AnyPost[]; activeDir: string };
+type Props          = PostProps | DirectoryProps;
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+/** Capitalize every word in a hyphen-separated path segment. */
+function titleCase(s: string): string {
+  return s.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+/**
+ * Builds the mixed series + post list for directory index pages.
+ *
+ * - Posts at the current depth → standalone post cards.
+ * - Subdirectories with one post → promoted to a standalone post card.
+ * - Subdirectories with multiple posts → a series card.
+ *
+ * Result is sorted: series first (alpha), then posts newest-first.
+ */
+function buildListItems(posts: AnyPost[], activeDir: string, categoryUrl: string): ListItem[] {
+  const directPosts: AnyPost[] = [];
+  const subdirGroups = new Map<string, AnyPost[]>();
+
+  for (const post of posts) {
+    const relId = activeDir ? post.id.slice(activeDir.length + 1) : post.id;
+    const parts  = relId.split("/");
+
+    if (parts.length === 1) {
+      directPosts.push(post);
+    } else {
+      const subdir = parts[0];
+      const group  = subdirGroups.get(subdir) ?? [];
+      group.push(post);
+      subdirGroups.set(subdir, group);
+    }
+  }
+
+  const items: ListItem[] = directPosts.map((post) => ({ type: "post", post }));
+
+  for (const [subdir, groupPosts] of subdirGroups) {
+    if (groupPosts.length === 1) {
+      items.push({ type: "post", post: groupPosts[0] });
+    } else {
+      const subdirPath  = activeDir ? `${activeDir}/${subdir}` : subdir;
+      const subdirTitle = titleCase(subdir);
+      items.push({
+        type: "series",
+        id: subdirPath,
+        title: subdirTitle,
+        description: `A collection on the topic of ${subdirTitle}.`,
+        postCount: groupPosts.length,
+        url: `${categoryUrl}/${subdirPath}/`,
+      });
+    }
+  }
+
+  return items.sort((a, b) => {
+    if (a.type !== b.type) return a.type === "series" ? -1 : 1;
+    if (a.type === "series" && b.type === "series") return a.title.localeCompare(b.title);
+    // Both posts — newest first
+    return (b as Extract<ListItem, { type: "post" }>).post.data.date.valueOf()
+         - (a as Extract<ListItem, { type: "post" }>).post.data.date.valueOf();
+  });
+}
+
+// ─── Static path generation ───────────────────────────────────────────────────
 
 export async function getStaticPaths() {
-  const paths = [];
+  const paths: { params: { category: string; slug: string | undefined }; props: Props }[] = [];
 
   for (const [category, meta] of Object.entries(CATEGORY_MAP)) {
-    const posts = await getCollection(
-      meta.collection,
-      ({ data }: any) => !data.draft,
-    );
+    const posts = await getCollection(meta.collection, ({ data }) => !data.draft) as AnyPost[];
 
-    // 1. Collect all subdirectories in the collection
+    // Collect every unique subdirectory path at all nesting depths
     const directories = new Set<string>();
-    posts.forEach((post: any) => {
+    for (const post of posts) {
       const parts = post.id.split("/");
-      parts.pop(); // Remove filename
-
-      // Add all levels of subdirectories (e.g. "trees", "trees/binary-trees")
-      for (let i = 1; i <= parts.length; i++) {
-        directories.add(parts.slice(0, i).join("/"));
+      parts.pop(); // strip filename
+      for (let depth = 1; depth <= parts.length; depth++) {
+        directories.add(parts.slice(0, depth).join("/"));
       }
-    });
+    }
 
-    // 2. Add Category Root Index path (slug = undefined)
+    // Category root index (slug = undefined)
     paths.push({
       params: { category, slug: undefined },
       props: { type: "directory", meta, posts, activeDir: "" },
     });
 
-    // 3. Add Subdirectory index paths
+    // Subdirectory index pages
     for (const dir of directories) {
-      const filteredPosts = posts.filter((post: any) =>
-        post.id.startsWith(dir + "/"),
-      );
       paths.push({
         params: { category, slug: dir },
         props: {
           type: "directory",
           meta,
-          posts: filteredPosts,
+          posts: posts.filter((p) => p.id.startsWith(dir + "/")),
           activeDir: dir,
         },
       });
     }
 
-    // 4. Add Post paths
+    // Individual post pages
     for (const post of posts) {
       paths.push({
         params: { category, slug: post.id },
@@ -66,170 +132,106 @@ export async function getStaticPaths() {
   return paths;
 }
 
-const buildListItems = (
-  posts: any[],
-  activeDir: string,
-  categoryUrl: string,
-): ListItem[] => {
-  const directPosts: any[] = [];
-  const subdirGroups = new Map<string, any[]>();
-
-  posts.forEach((post) => {
-    const relativeId =
-      activeDir === "" ? post.id : post.id.slice(activeDir.length + 1);
-    const parts = relativeId.split("/");
-
-    if (parts.length === 1) {
-      directPosts.push(post);
-    } else {
-      const subdir = parts[0];
-      if (!subdirGroups.has(subdir)) {
-        subdirGroups.set(subdir, []);
-      }
-      subdirGroups.get(subdir)!.push(post);
-    }
-  });
-
-  const listItems: ListItem[] = directPosts.map((post) => ({
-    type: "post",
-    post,
-  }));
-
-  for (const [subdir, groupPosts] of subdirGroups.entries()) {
-    if (groupPosts.length === 1) {
-      // Promote single-post subdirs to standalone posts
-      listItems.push({ type: "post", post: groupPosts[0] });
-    } else {
-      // Create a series card for subdirs with multiple posts
-      const subdirPath = activeDir ? `${activeDir}/${subdir}` : subdir;
-      const subdirTitle = subdir
-        .replace(/-/g, " ")
-        .replace(/\b\w/g, (c) => c.toUpperCase()); // Capitalize words
-
-      listItems.push({
-        type: "series",
-        id: subdirPath,
-        title: subdirTitle,
-        description: `A collection on the topic of ${subdirTitle}.`,
-        postCount: groupPosts.length,
-        url: `${categoryUrl}/${subdirPath}/`,
-      });
-    }
-  }
-
-  // Sort them: series first (alphabetically), then posts by date descending
-  return listItems.sort((a, b) => {
-    if (a.type !== b.type) {
-      return a.type === "series" ? -1 : 1;
-    }
-    if (a.type === "series" && b.type === "series") {
-      return a.title.localeCompare(b.title);
-    }
-    return b.post.data.date.valueOf() - a.post.data.date.valueOf();
-  });
-};
+// ─── Page data ────────────────────────────────────────────────────────────────
+//
+// All async work happens here in the frontmatter so the template stays
+// purely declarative.
 
 const { category } = Astro.params;
-const props = Astro.props as Props;
-const { type, meta } = props;
+const { type, meta } = Astro.props as Props;
 
-let Content,
-  headings,
-  seriesPosts,
-  pageTitle,
-  listItems,
-  activeDir,
-  currentDirName;
+// ── Post branch ──────────────────────────────────────────────────────────────
+let post: AnyPost | undefined;
+let Content: Awaited<ReturnType<typeof render>>["Content"] | undefined;
+let headings: { depth: number; slug: string; text: string }[] = [];
+let seriesPosts: AnyPost[] = [];
 
-if (props.type === "post") {
-  const { post } = props;
+// ── Directory branch ─────────────────────────────────────────────────────────
+let pageTitle: string      = meta.title;
+let currentDirName: string = meta.title;
+let listItems: ListItem[]  = [];
+let activeDir              = "";
+
+if (type === "post") {
+  const postProps = Astro.props as PostProps;
+  post = postProps.post;
+
   const rendered = await render(post);
-  Content = rendered.Content;
+  Content  = rendered.Content;
   headings = rendered.headings;
 
-  // Get the parent directory (series path) of this post
-  const pathParts = post.id.split("/");
-  pathParts.pop(); // remove filename
+  // Resolve sibling posts in the same directory (the series)
+  const pathParts  = post.id.split("/");
+  pathParts.pop(); // strip filename
   const seriesPath = pathParts.join("/");
 
-  // Get all posts in this collection to filter for the series
-  const allPosts = await getCollection(
-    meta.collection,
-    ({ data }: any) => !data.draft,
-  );
-  seriesPosts = seriesPath
-    ? allPosts
-        .filter((p: any) => {
-          const pParts = p.id.split("/");
-          pParts.pop();
-          return pParts.join("/") === seriesPath;
-        })
-        .sort((a: any, b: any) => a.data.date.valueOf() - b.data.date.valueOf())
-    : [];
+  if (seriesPath) {
+    const allPosts = await getCollection(meta.collection, ({ data }) => !data.draft) as AnyPost[];
+    seriesPosts = allPosts
+      .filter((p) => {
+        const pParts = p.id.split("/");
+        pParts.pop();
+        return pParts.join("/") === seriesPath;
+      })
+      .sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
+  }
 } else {
-  activeDir = props.activeDir;
-  listItems = buildListItems(props.posts, activeDir, `/${category}`);
+  const dirProps = Astro.props as DirectoryProps;
+  activeDir = dirProps.activeDir;
 
-  // Format page title to reflect subdirectory nesting
+  listItems = buildListItems(dirProps.posts, activeDir, `/${category}`);
+
   pageTitle = activeDir
     ? `${meta.title} / ${activeDir.replace(/\//g, " / ").replace(/-/g, " ")}`
     : meta.title;
 
-  currentDirName = activeDir
-    ? activeDir
-        .split("/")
-        .pop()!
-        .replace(/-/g, " ")
-        .replace(/\b\w/g, (c) => c.toUpperCase())
-    : meta.title;
+  currentDirName = activeDir ? titleCase(activeDir.split("/").pop()!) : meta.title;
 }
 ---
 
-{
-  type === "post" ? (
-    <PostLayout
-      title={Astro.props.post.data.title}
-      subtitle={Astro.props.post.data.subtitle}
-      author={Astro.props.post.data.author}
-      heroImage={Astro.props.post.data.heroImage}
-      description={Astro.props.post.data.description}
-      date={Astro.props.post.data.date}
-      category={meta.title}
-      categoryUrl={`/${category}`}
-      tags={Astro.props.post.data.tags}
-      headings={headings}
-      slug={Astro.props.post.id}
-      seriesPosts={seriesPosts}
-    >
-      <Content />
-    </PostLayout>
-  ) : (
-    <BaseLayout title={pageTitle} description={meta.description}>
-      <div class="category-container">
-        <div class="category-header">
-          <h1 class="category-subtitle">{meta.description.toUpperCase()}</h1>
-          <div class="breadcrumb-wrapper">
-            <Breadcrumb
-              category={meta.title}
-              categoryUrl={`/${category}`}
-              title={currentDirName}
-              slug={activeDir}
-            />
-          </div>
-        </div>
-        <div class="posts-grid-container">
-          <PostList items={listItems} />
+{type === "post" && post && Content ? (
+  <PostLayout
+    title={post.data.title}
+    subtitle={post.data.subtitle}
+    author={post.data.author}
+    heroImage={post.data.heroImage}
+    description={post.data.description}
+    date={post.data.date}
+    category={meta.title}
+    categoryUrl={`/${category}`}
+    tags={post.data.tags}
+    headings={headings}
+    slug={post.id}
+    seriesPosts={seriesPosts}
+  >
+    <Content />
+  </PostLayout>
+) : type === "directory" ? (
+  <BaseLayout title={pageTitle} description={meta.description}>
+    <div class="category-container">
+      <div class="category-header">
+        <h1 class="category-subtitle">{meta.description}</h1>
+        <div class="breadcrumb-wrapper">
+          <Breadcrumb
+            category={meta.title}
+            categoryUrl={`/${category}`}
+            title={currentDirName}
+            slug={activeDir}
+          />
         </div>
       </div>
-    </BaseLayout>
-  )
-}
+      <div class="posts-grid-container">
+        <PostList items={listItems} />
+      </div>
+    </div>
+  </BaseLayout>
+) : null}
 
 <style>
   .category-container {
-    width: 100%;
     margin-inline: auto;
   }
+
   .category-subtitle {
     font-family: var(--font-label);
     font-size: var(--text-xs);
@@ -241,14 +243,17 @@ if (props.type === "post") {
     line-height: var(--leading-body);
     font-weight: 500;
   }
+
   .breadcrumb-wrapper {
     width: 100%;
   }
+
   .category-header {
     max-width: var(--measure-grid);
     margin-inline: auto;
     margin-bottom: var(--space-5);
   }
+
   .posts-grid-container {
     max-width: var(--measure-grid);
     margin-inline: auto;

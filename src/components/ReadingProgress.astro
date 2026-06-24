@@ -1,4 +1,5 @@
 ---
+
 ---
 
 <!-- Reading progress bar — 2px line at very top of viewport -->
@@ -7,7 +8,8 @@
   role="progressbar"
   aria-label="Reading progress"
   aria-hidden="true"
-></div>
+>
+</div>
 
 <!-- Back-to-top button — appears after 400px of scroll -->
 <button id="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
@@ -22,7 +24,8 @@
       const scrollTop = window.scrollY;
       const maxScroll =
         document.documentElement.scrollHeight - window.innerHeight;
-      const pct = maxScroll > 0 ? Math.min((scrollTop / maxScroll) * 100, 100) : 0;
+      const pct =
+        maxScroll > 0 ? Math.min((scrollTop / maxScroll) * 100, 100) : 0;
 
       bar.style.width = `${pct}%`;
       btn.classList.toggle("is-visible", scrollTop > 400);
@@ -100,8 +103,8 @@
       opacity var(--transition-fast),
       transform var(--transition-fast),
       border-color var(--transition-fast),
-      /* delay visibility OFF so it fades out before disappearing */
-      visibility 0s var(--transition-fast);
+      /* delay visibility OFF so it fades out before disappearing */ visibility
+        0s var(--transition-fast);
   }
 
   #back-to-top.is-visible {

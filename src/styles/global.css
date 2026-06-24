@@ -60,7 +60,7 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Links: inherit text color, dotted underline at rest; cobalt + solid on hover */
+/* Links: inherit color, dotted underline at rest; cobalt on hover */
 a {
   color: inherit;
   text-decoration: underline;
@@ -68,12 +68,14 @@ a {
   text-decoration-color: var(--color-border);
   text-decoration-thickness: var(--border-thin);
   text-underline-offset: var(--underline-offset);
-  transition: all var(--transition-base);
+  transition:
+    color var(--transition-base),
+    text-decoration-color var(--transition-base);
 }
 
 a:hover {
   color: var(--color-link);
-  text-decoration-style: solid;
+  text-decoration-style: dotted;
   text-decoration-color: var(--color-link);
 }
 
@@ -158,11 +160,11 @@ time,
   hyphens: auto;
 }
 
-/* Links — colored underline at rest (cobalt); more legible and accessible */
+/* Links — colored dotted underline at rest; stays dotted on hover */
 .prose a {
   font-weight: 500;
   text-decoration-color: var(--color-link);
-  text-decoration-style: solid;
+  text-decoration-style: dotted;
   text-decoration-thickness: var(--border-thin);
   text-underline-offset: var(--underline-offset);
   transition:
@@ -173,14 +175,19 @@ time,
 .prose a:hover {
   color: var(--color-link);
   text-decoration-color: var(--color-link);
+  text-decoration-style: dotted;
 }
 
 /* Blockquote */
 .prose blockquote {
   margin: var(--space-4) 0;
   padding-left: var(--space-4);
-  border-left: var(--border-thick) solid var(--color-border);
+  /* Splash of color: cobalt border for quotes */
+  border-left: var(--border-thick) solid var(--color-accent);
   color: var(--color-text-muted);
+  background: color-mix(in srgb, var(--color-accent) 5%, transparent);
+  padding: var(--space-3) var(--space-4);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
 
 /* Lists */
@@ -201,13 +208,19 @@ time,
 .prose ol li::marker {
   font-family: var(--font-label);
   font-size: var(--text-xs);
-  color: var(--color-text-muted);
+  color: var(--color-accent); /* Colored numbers */
+}
+
+.prose ul li::marker {
+  color: var(--color-accent); /* Colored square bullets */
 }
 
 /* Horizontal rule */
 .prose hr {
   border: none;
-  border-top: var(--border-thin) solid var(--color-border);
+  /* Splash of color */
+  border-top: var(--border-thin) dashed var(--color-accent);
+  opacity: 0.4;
   margin: var(--space-6) 0;
 }
 
@@ -295,6 +308,7 @@ html[data-theme='dark'] .prose .astro-code span {
 
 /* ≥ 480px — larger phones, small tablets in landscape */
 @media (min-width: 30rem) {
+
   main,
   .responsive-padding {
     padding-inline: var(--space-4);
@@ -307,6 +321,7 @@ html[data-theme='dark'] .prose .astro-code span {
 
 /* ≥ 640px — tablets */
 @media (min-width: 40rem) {
+
   main,
   .responsive-padding {
     padding-inline: var(--space-5);
@@ -319,6 +334,7 @@ html[data-theme='dark'] .prose .astro-code span {
 
 /* ≥ 768px — large tablets / small desktops */
 @media (min-width: 48rem) {
+
   main,
   .responsive-padding {
     padding-inline: var(--space-6);

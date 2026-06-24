@@ -3,7 +3,6 @@ import BaseLayout from "./BaseLayout.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import PostHeader from "../components/PostHeader.astro";
 import SeriesNavigator from "../components/SeriesNavigator.astro";
-import TableOfContents from "../components/TableOfContents.astro";
 import ReadingProgress from "../components/ReadingProgress.astro";
 import { formatDate } from "../utils/formatDate";
 
@@ -38,53 +37,38 @@ const {
 } = Astro.props;
 
 const formattedDate = formatDate(date);
-
-// Only activate the two-column grid when there are enough headings to warrant a ToC
-const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
-const hasToc = tocHeadings.length > 1;
 ---
 
 <BaseLayout title={title} description={description}>
   <ReadingProgress />
 
-  <div class={`post-layout-grid${hasToc ? " has-toc" : ""}`}>
-    <!-- Primary column: breadcrumb + paper article -->
-    <div class="paper-wrapper">
-      <Breadcrumb
-        category={category}
-        categoryUrl={categoryUrl}
+  <div class="paper-wrapper">
+    <Breadcrumb
+      category={category}
+      categoryUrl={categoryUrl}
+      title={title}
+      slug={slug}
+    />
+    <article class="paper-overlay prose">
+      <PostHeader
         title={title}
-        slug={slug}
+        subtitle={subtitle}
+        author={author}
+        date={date}
+        formattedDate={formattedDate}
+        heroImage={heroImage}
       />
-      <article class="paper-overlay prose">
-        <PostHeader
-          title={title}
-          subtitle={subtitle}
-          author={author}
-          date={date}
-          formattedDate={formattedDate}
-          heroImage={heroImage}
-        />
-        <SeriesNavigator
-          seriesPosts={seriesPosts}
-          slug={slug}
-          categoryUrl={categoryUrl}
-        />
-        <slot />
-      </article>
-    </div>
-
-    <!-- Secondary column: sticky ToC (only rendered when hasToc) -->
-    {hasToc && <TableOfContents headings={headings} />}
+      <SeriesNavigator
+        seriesPosts={seriesPosts}
+        slug={slug}
+        categoryUrl={categoryUrl}
+      />
+      <slot />
+    </article>
   </div>
 </BaseLayout>
 
 <style>
-  /* ─── Single-column default (all screen sizes below 80rem) ─────────────── */
-  .post-layout-grid {
-    width: 100%;
-  }
-
   .paper-wrapper {
     min-width: 0;
     max-width: var(--measure);
@@ -92,7 +76,6 @@ const hasToc = tocHeadings.length > 1;
     width: 100%;
   }
 
-  /* ─── The Premium Paper Overlay ─────────────────────────────────────────── */
   .paper-overlay {
     background: var(--color-paper);
     padding: var(--space-8) var(--space-7);
@@ -103,7 +86,7 @@ const hasToc = tocHeadings.length > 1;
     position: relative;
   }
 
-  /* Large tablets — tighten horizontal padding slightly */
+  /* Large tablets */
   @media (max-width: 64rem) {
     .paper-overlay {
       padding: var(--space-7) var(--space-6);
@@ -117,7 +100,7 @@ const hasToc = tocHeadings.length > 1;
     }
   }
 
-  /* Small tablets / large phones — edge-to-edge, drop the card metaphor */
+  /* Small tablets / phones — edge-to-edge, drop the card metaphor */
   @media (max-width: 48rem) {
     .paper-overlay {
       padding: var(--space-6) var(--space-5);
@@ -127,34 +110,9 @@ const hasToc = tocHeadings.length > 1;
       margin-bottom: 0;
     }
   }
-
-  /* ─── Two-column grid with TOC (≥ 80rem / 1280px) ──────────────────────── */
-  @media (min-width: 80rem) {
-    .post-layout-grid.has-toc {
-      display: grid;
-      /*
-        Left column: exactly --measure (52rem) for the paper.
-        Right column: fills remaining space up to 15rem for the ToC.
-        We use fit-content + margin-inline: auto to centre the whole grid.
-      */
-      grid-template-columns: var(--measure) minmax(0, 15rem);
-      gap: var(--space-5);
-      align-items: start;
-      width: fit-content;
-      margin-inline: auto;
-    }
-
-    /* When the grid is active, paper-wrapper fills its column naturally */
-    .post-layout-grid.has-toc .paper-wrapper {
-      margin-inline: 0;
-      max-width: none;
-    }
-  }
 </style>
 
 <style is:global>
-  /* On mobile post pages, the entire screen background matches the paper,
-     dropping the card metaphor completely for an immersive reading experience */
   @media (max-width: 48rem) {
     body {
       background: var(--color-paper);

@@ -157,12 +157,12 @@ function truncate(str: string) {
     min-width: 0;
 
     position: sticky;
-    top: -1px;
+    top: var(--space-n-pixel);
     z-index: 40;
 
     background-color: var(--color-bg);
     padding: var(--space-2) var(--space-3);
-    padding-top: calc(var(--space-2) + 1px);
+    padding-top: calc(var(--space-2) + var(--space-pixel));
 
     border-radius: var(--radius-sm);
     border: var(--border-thin) solid transparent;
@@ -211,7 +211,7 @@ function truncate(str: string) {
     font-size: var(--text-micro);
     letter-spacing: var(--tracking-tight);
     margin: 0;
-    line-height: 1.5;
+    line-height: var(--leading-snug);
     color: var(--color-text-muted);
     white-space: nowrap;
   }

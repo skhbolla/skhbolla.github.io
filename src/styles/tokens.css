@@ -86,7 +86,15 @@
   --tracking-normal: 0.01em;
   --tracking-brand: -0.05em;  /* brand logotype condensed */
 
+  /* Font weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
   /* Spacing rhythm */
+  --space-pixel: 1px;
+  --space-n-pixel: -1px;
   --space-nano: 0.125rem;  /* 2px equivalent — sub-pixel gaps */
   --space-micro: 0.25rem; /* 4px equivalent — badge padding */
   --space-stack: 0.25rem; /* 4px — card stack offset base unit */
@@ -111,9 +119,12 @@
   --card-size-md: 11.5rem;   /* ~184px — medium mobile (40–64rem) */
   --card-size-sm: 10.125rem; /* ~162px — small mobile */
 
-  /* Transitions */
+  /* Transitions & Transforms */
   --transition-fast: 0.15s ease;
   --transition-base: 0.2s ease;
+  --transform-rotate-hover: -0.5deg;
+  --transform-scale-hover: 1.015;
+  --transform-scale-hover-sm: 1.01;
 
   /* Typographic details */
   --underline-offset: 3px;

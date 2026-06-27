@@ -141,7 +141,7 @@ function getCategorySlug(collectionName: string): string {
 
   /* Hover micro-animations */
   .series-stack:hover .front-card {
-    transform: translateY(-3px) rotate(-0.5deg);
+    transform: translateY(calc(var(--space-pixel) * -3)) rotate(var(--transform-rotate-hover));
     border-color: var(--color-accent);
     box-shadow: var(--shadow-paper-hover);
   }
@@ -187,7 +187,7 @@ function getCategorySlug(collectionName: string): string {
   }
 
   .post-card:not(.front-card):hover {
-    transform: translateY(-3px) scale(1.015);
+    transform: translateY(calc(var(--space-pixel) * -3)) scale(var(--transform-scale-hover));
     border-color: var(--color-accent);
     box-shadow: var(--shadow-paper-hover);
   }
@@ -289,7 +289,7 @@ function getCategorySlug(collectionName: string): string {
   }
 
   .post-card:hover .arrow {
-    transform: translate(2px, 2px);
+    transform: translate(calc(var(--space-pixel) * 2), calc(var(--space-pixel) * 2));
   }
 
   /* ─── Tablet Overrides (40–64rem) ─── */
@@ -330,7 +330,7 @@ function getCategorySlug(collectionName: string): string {
     }
 
     .series-stack:hover .front-card {
-      transform: translateY(-2px) rotate(-0.5deg);
+      transform: translateY(calc(var(--space-pixel) * -2)) rotate(var(--transform-rotate-hover));
       border-color: var(--color-accent);
       box-shadow: var(--shadow-paper-hover);
     }
@@ -345,7 +345,7 @@ function getCategorySlug(collectionName: string): string {
     }
 
     .post-card:not(.front-card):hover {
-      transform: translateY(-2px) scale(1.01);
+      transform: translateY(calc(var(--space-pixel) * -2)) scale(var(--transform-scale-hover-sm));
     }
 
     .card-meta {

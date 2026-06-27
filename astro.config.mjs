@@ -1,28 +1,35 @@
-// @ts-check
 import { defineConfig } from 'astro/config';
-import mdx from '@astrojs/mdx';
+
+import astroExpressiveCode from 'astro-expressive-code';
 
 // https://astro.build/config
 export default defineConfig({
-  // Update this to your actual GitHub Pages URL.
-  // Since this repo is username.github.io (a user-pages repo), it serves
-  // from the domain root, so no `base` path is needed. If you ever move
-  // this to a regular project repo instead, you'll need to add
-  // base: '/repo-name' here.
   site: 'https://skhbolla.github.io',
 
-  integrations: [mdx()],
-
-  markdown: {
-    shikiConfig: {
-      themes: {
-        light: 'github-light',
-        dark: 'github-dark',
-      },
-      defaultColor: false,
-      wrap: true,
-    },
-  },
+  integrations: [
+    astroExpressiveCode({
+      themeCssSelector: (theme) => `[data-theme='${theme.type}']`,
+      themes: ['github-light', 'github-dark'],
+      useThemedScrollbars: false,
+      styleOverrides: {
+        borderRadius: 'var(--radius-lg)',
+        borderWidth: 'var(--border-thin)',
+        borderColor: 'var(--base03)',
+        codeBackground: 'var(--base02)',
+        uiFontFamily: 'var(--font-label)',
+        uiFontSize: 'var(--text-xs)',
+        codeFontFamily: 'var(--font-code)',
+        frames: {
+          frameBoxShadowCssValue: 'none',
+          editorTabBarBackground: 'var(--base01)',
+          editorActiveTabBackground: 'var(--base02)',
+          editorActiveTabBorderColor: 'var(--base0D)',
+          terminalTitlebarBackground: 'var(--base01)',
+          terminalBackground: 'var(--base02)'
+        }
+      }
+    })
+  ],
 
   // Both fonts (Departure Mono + Arizona, once added) are plain static
   // files in public/fonts/, wired up via @font-face in

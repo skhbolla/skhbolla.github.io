@@ -94,7 +94,7 @@ code,
 pre,
 kbd {
   font-family: var(--font-code);
-  font-weight: 400;
+  font-weight: var(--font-weight-normal);
   letter-spacing: var(--tracking-normal);
 }
 
@@ -136,7 +136,7 @@ time,
 .prose h2,
 .prose h3 {
   line-height: var(--leading-tight);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   margin-top: var(--space-6);
   margin-bottom: var(--space-2);
 }
@@ -162,7 +162,7 @@ time,
 
 /* Links — colored dotted underline at rest; stays dotted on hover */
 .prose a {
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   text-decoration-color: var(--color-link);
   text-decoration-style: dotted;
   text-decoration-thickness: var(--border-thin);
@@ -240,28 +240,15 @@ time,
   overflow-x: auto;
 }
 
+/* Expressive Code Spacing Override */
+.prose .expressive-code {
+  margin-top: var(--space-5) !important;
+  margin-bottom: var(--space-5) !important;
+}
+
 .prose pre code {
   background: none;
   padding: 0;
-}
-
-/* Dual-theme Shiki integration */
-.prose .astro-code,
-.prose .astro-code span {
-  color: var(--shiki-light);
-  background-color: var(--shiki-light-bg);
-  font-style: var(--shiki-light-font-style);
-  font-weight: var(--shiki-light-font-weight);
-  text-decoration: var(--shiki-light-text-decoration);
-}
-
-html[data-theme='dark'] .prose .astro-code,
-html[data-theme='dark'] .prose .astro-code span {
-  color: var(--shiki-dark);
-  background-color: var(--shiki-dark-bg);
-  font-style: var(--shiki-dark-font-style);
-  font-weight: var(--shiki-dark-font-weight);
-  text-decoration: var(--shiki-dark-text-decoration);
 }
 
 /* Tables */

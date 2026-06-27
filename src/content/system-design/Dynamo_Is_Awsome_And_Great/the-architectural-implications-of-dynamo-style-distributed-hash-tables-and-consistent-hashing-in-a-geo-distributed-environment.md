@@ -20,7 +20,7 @@ In a typical Dynamo-style architecture, nodes are mapped to a logical ring.
 
 Here is a naive implementation of a consistent hash ring in Python:
 
-```python
+```python title="hashing.py" {2} ins={5,8-9} del={6}
 import hashlib
 
 class ConsistentHashRing:

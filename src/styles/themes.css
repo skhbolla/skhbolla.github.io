@@ -1,41 +1,49 @@
 /*
-  Color tokens only. Adding a new theme later means adding one more
-  [data-theme="x"] block here and one entry in ThemeToggle.astro's
-  `themes` array — nothing else in the site needs to change.
+  Color tokens only (Base16 Standard).
+  Adding a new theme later means adding one more [data-theme="x"] block here.
+  
+  Base16 Roles:
+  00-07: Backgrounds to Foregrounds (Light to Dark in Light themes, Dark to Light in Dark themes)
+  08: Red, 09: Orange, 0A: Yellow, 0B: Green, 0C: Cyan, 0D: Blue, 0E: Magenta, 0F: Brown
 */
 
-/* ─── Light ──────────────────────────────────────────────────────────────────
-   Neutrals are from the "stone" family (oklch hue ≈ 49–58, very low chroma)
-   which sits just barely warm of true grey — matching Arizona/Newsreader's
-   optical character. Links are cobalt-600 (their production value).
-   ──────────────────────────────────────────────────────────────────────────── */
+/* ─── Light (Base16) ───────────────────────────────────────────────────────── */
 [data-theme='light'] {
-   --color-bg: #f4f4f5;
-   /* slightly darker gray to let paper pop  */
-   --color-bg-raised: oklch(96.7% .001 286.375);
-   /* zinc-100 — cards, code, raised panels  */
-   --color-paper: #ffffff;
-   /* pure white paper overlay               */
-   --color-text: oklch(14.7% .004 49.25);
-   /* stone-950 — near-black body text       */
-   --color-text-muted: oklch(44.4% .011 73.639);
-   /* stone-600 — dates, captions, meta      */
-   --color-border: oklch(86.9% .005 56.366);
-   /* stone-300 — dividers, outlines         */
-   --color-accent: oklch(50.58% .2886 264.84);
-   /* cobalt-600 — interactive accent        */
-   --color-link: oklch(50.58% .2886 264.84);
-   /* cobalt-600 — prose links               */
+   /* Core Base16 Palette */
+   --base00: #f4f4f5; /* Background */
+   --base01: oklch(96.7% .001 286.375); /* Lighter Background (Raised) */
+   --base02: oklch(95.5% .002 286); /* Selection / Code Background */
+   --base03: oklch(86.9% .005 56.366); /* Borders / Line Highlighting */
+   --base04: oklch(44.4% .011 73.639); /* Muted Foreground / Comments */
+   --base05: oklch(14.7% .004 49.25); /* Default Foreground */
+   --base06: oklch(10% .002 49); /* Dark Foreground */
+   --base07: #ffffff; /* Paper Overlay (Special case for site layout) */
+   
+   /* Accent Palette */
+   --base08: oklch(54% 0.22 29); /* Red */
+   --base09: oklch(65% 0.18 55); /* Orange */
+   --base0A: oklch(92.4% .12 95.746); /* Yellow (Highlight Background) */
+   --base0B: oklch(58% 0.16 160); /* Green */
+   --base0C: oklch(60% 0.12 200); /* Cyan */
+   --base0D: oklch(50.58% .2886 264.84); /* Blue (Accent / Link) */
+   --base0E: oklch(55% 0.25 320); /* Magenta */
+   --base0F: oklch(45% 0.1 70); /* Brown */
 
-   /* amber-200 selection highlight */
-   --color-highlight-bg: oklch(92.4% .12 95.746);
-   --color-highlight-text: oklch(14.7% .004 49.25);
-   /* stone-950 on amber — good contrast      */
+   /* Semantic Mappings */
+   --color-bg: var(--base00);
+   --color-bg-raised: var(--base01);
+   --color-paper: var(--base07);
+   --color-code-bg: var(--base02);
+   --color-border: var(--base03);
+   --color-text-muted: var(--base04);
+   --color-text: var(--base05);
+   --color-accent: var(--base0D);
+   --color-link: var(--base0D);
 
-   --color-code-bg: oklch(95.5% .002 286);
-   /* off-white surface for inline/block code */
+   --color-highlight-bg: var(--base0A);
+   --color-highlight-text: var(--base05);
 
-   /* Flat retro button styles */
+   /* Derived Visuals */
    --btn-bg: rgba(255, 255, 255, 0.5);
    --btn-bg-active: rgba(0, 0, 0, 0.1);
    --btn-border: rgba(0, 0, 0, 0.5);
@@ -43,51 +51,49 @@
    --btn-shadow: inset 1px 1px 0px 1px rgba(255, 255, 255, 0.75), inset -1px -1px 0px 1px rgba(0, 0, 0, 0.10);
    --btn-shadow-active: inset 1px 1px 0px 1px rgba(0, 0, 0, 0.15), inset -1px -1px 0px 1px rgba(255, 255, 255, 0.2);
 
-   /* Paper components */
    --shadow-paper: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.02);
    --shadow-paper-hover: 0 12px 24px -10px rgba(0, 0, 0, 0.08), 0 4px 8px -4px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.02);
    --color-paper-glass: color-mix(in srgb, var(--color-bg) 85%, transparent);
    --color-card-border: rgba(0, 0, 0, 0.04);
 }
 
-/* ─── Dark ───────────────────────────────────────────────────────────────────
-   Color-theory counterpart. Core principles:
-   1. Same stone hue axis (h ≈ 49) for bg/text — maintains the warm-neutral
-      character of the light theme without going fully grey or fully amber.
-   2. Cobalt link color steps up from cobalt-600 → cobalt-300 because on a
-      dark surface you need ~2× the lightness to hit the same perceptual weight.
-   3. Amber highlight bg is "crushed" to dark-mode luminance (~30%) while
-      preserving the hue — text flips to a bright amber-300 for legibility.
-   4. Borders use very low chroma (~.005) at 22% lightness — just enough to
-      divide surfaces without competing with content.
-   ──────────────────────────────────────────────────────────────────────────── */
+/* ─── Dark (Base16) ────────────────────────────────────────────────────────── */
 [data-theme='dark'] {
-   --color-bg: oklch(13% .004 49.25);
-   /* deep stone-dark — below stone-950      */
-   --color-bg-raised: oklch(17% .005 49.25);
-   /* slightly elevated surface              */
-   --color-paper: var(--color-bg-raised);
-   /* matches raised background              */
-   --color-text: oklch(92% .005 49.25);
-   /* warm off-white — same stone hue family */
-   --color-text-muted: oklch(56% .010 56);
-   /* stone-500 range — readable but receded */
-   --color-border: oklch(22% .005 49.25);
-   /* subtle warm-dark divider               */
-   --color-accent: oklch(76.12% .1218 272.4);
-   /* cobalt-300 — light enough on dark bg   */
-   --color-link: oklch(76.12% .1218 272.4);
-   /* cobalt-300 — prose links               */
+   /* Core Base16 Palette (Monokai) */
+   --base00: #272822; /* Background */
+   --base01: #383830; /* Lighter Background (Raised) */
+   --base02: #49483e; /* Selection / Code Background */
+   --base03: #75715e; /* Borders / Line Highlighting */
+   --base04: #a59f85; /* Muted Foreground / Comments */
+   --base05: #f8f8f2; /* Default Foreground */
+   --base06: #f5f4f1; /* Light Foreground */
+   --base07: #f9f8f5; /* Lightest */
+   
+   /* Accent Palette (Monokai) */
+   --base08: #f92672; /* Red */
+   --base09: #fd971f; /* Orange */
+   --base0A: #f4bf75; /* Yellow */
+   --base0B: #a6e22e; /* Green */
+   --base0C: #a1efe4; /* Cyan */
+   --base0D: #66d9ef; /* Blue (Accent / Link) */
+   --base0E: #ae81ff; /* Magenta */
+   --base0F: #cc6633; /* Brown */
 
-   /* Dark amber: same hue as amber-200, luminance crushed to 30% */
-   --color-highlight-bg: oklch(30% .09 80);
-   --color-highlight-text: oklch(90% .12 91.605);
-   /* amber-300 range — legible on dark glow */
+   /* Semantic Mappings */
+   --color-bg: var(--base00);
+   --color-bg-raised: var(--base01);
+   --color-paper: var(--base01);
+   --color-code-bg: var(--base02);
+   --color-border: var(--base03);
+   --color-text-muted: var(--base04);
+   --color-text: var(--base05);
+   --color-accent: var(--base0D);
+   --color-link: var(--base0D);
 
-   --color-code-bg: oklch(17% .005 49.25);
-   /* matches bg-raised                      */
+   --color-highlight-bg: var(--base03);
+   --color-highlight-text: var(--base0A); /* High contrast amber text */
 
-   /* Flat retro button styles - dark mode variants */
+   /* Derived Visuals */
    --btn-bg: rgba(0, 0, 0, 0.3);
    --btn-bg-active: rgba(255, 255, 255, 0.1);
    --btn-border: rgba(255, 255, 255, 0.3);
@@ -95,7 +101,6 @@
    --btn-shadow: inset 1px 1px 0px 1px rgba(255, 255, 255, 0.1), inset -1px -1px 0px 1px rgba(0, 0, 0, 0.5);
    --btn-shadow-active: inset 1px 1px 0px 1px rgba(0, 0, 0, 0.6), inset -1px -1px 0px 1px rgba(255, 255, 255, 0.05);
 
-   /* Paper components - dark mode variants */
    --shadow-paper: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 4px 24px rgba(0, 0, 0, 0.2);
    --shadow-paper-hover: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 8px 30px rgba(0, 0, 0, 0.35);
    --color-paper-glass: color-mix(in srgb, var(--color-bg) 85%, transparent);

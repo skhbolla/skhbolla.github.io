@@ -19,8 +19,6 @@ protocol without you ever thinking about it.
 Until two threads write to *adjacent but unrelated* fields that happen to
 live on the same line.
 
-<CacheLineDiagram caption="x and y are independent counters, but they share a cache line with lock and pad" />
-
 If `x` is updated by thread A and `y` by thread B, the two threads are
 logically unrelated — but physically, every write to `x` invalidates the
 entire line, including `y`, on every other core. The two threads end up
@@ -40,6 +38,7 @@ struct Counters {
     char pad2[56];
 };
 ```
+
 
 Deliberately wasting 112 bytes of padding to make the struct *faster* is
 the kind of thing that only makes sense once you've internalized that the

@@ -1,7 +1,6 @@
 ---
 import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/Header.astro";
-import CodeEnhance from "../components/CodeEnhance.astro";
 import "../styles/global.css";
 
 interface Props {
@@ -26,7 +25,5 @@ const {
     <main>
       <slot />
     </main>
-    <!-- Progressively enhances Shiki code blocks with lang labels + copy buttons -->
-    <CodeEnhance />
   </body>
 </html>

@@ -8,8 +8,6 @@ date: 2024-03-15
 tags: ["caching", "concurrency"]
 ---
 
-import CacheLineDiagram from '../../components/CacheLineDiagram.astro';
-
 Most of the time a cache line behaves exactly like you'd expect: each core
 keeps its own copy, reads are free, writes get reconciled by the coherence
 protocol without you ever thinking about it.

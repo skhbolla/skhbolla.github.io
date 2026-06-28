@@ -48,17 +48,17 @@ const items = collectionsCount
 
 <style>
   .metrics-wrapper {
-    margin: var(--space-7) auto;
+    margin: var(--space-18) auto;
     width: 100%;
     max-width: var(--measure);
-    padding: 0 var(--space-3);
+    padding: 0 var(--space-4);
   }
 
   .metrics-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: var(--space-6);
-    row-gap: var(--space-3);
+    column-gap: var(--space-12);
+    row-gap: var(--space-4);
     margin: 0;
     padding: 0;
   }
@@ -73,6 +73,7 @@ const items = collectionsCount
   .metric-label {
     font-family: var(--font-label);
     font-size: var(--text-xs);
+    line-height: var(--leading-xs);
     color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: var(--tracking-wide);
@@ -81,13 +82,14 @@ const items = collectionsCount
   .metric-value {
     font-family: var(--font-label);
     font-size: var(--text-xs);
+    line-height: var(--leading-xs);
     color: var(--color-text);
     text-align: right;
     font-weight: var(--font-weight-bold);
     margin: 0;
   }
 
-  @media (max-width: 35rem) {
+  @media (max-width: 40rem) {
     .metrics-grid {
       grid-template-columns: minmax(0, 1fr);
       column-gap: 0;

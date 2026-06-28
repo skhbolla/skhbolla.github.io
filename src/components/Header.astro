@@ -51,8 +51,8 @@ const navLinks = [
   .header-inner {
     max-width: var(--measure);
     margin-inline: auto;
-    padding-top: var(--space-5); /* Increased top space for tablets */
-    padding-bottom: var(--space-3);
+    padding-top: var(--space-8); /* Increased top space for tablets */
+    padding-bottom: var(--space-4);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -60,7 +60,8 @@ const navLinks = [
 
   .brand {
     font-family: var(--font-label);
-    font-size: var(--text-lg);
+    font-size: var(--text-xl);
+    line-height: var(--leading-xl);
     font-weight: 700;
     color: var(--color-text);
     text-decoration: none;
@@ -85,12 +86,12 @@ const navLinks = [
   .nav-container {
     display: flex;
     align-items: center;
-    gap: var(--space-4);
+    gap: var(--space-6);
   }
 
   nav {
     display: flex;
-    gap: var(--space-3);
+    gap: var(--space-4);
     align-items: center;
     flex-wrap: wrap;
   }
@@ -98,10 +99,11 @@ const navLinks = [
   nav a {
     font-family: var(--font-label);
     font-size: var(--text-xs);
+    line-height: var(--leading-xs);
     color: var(--color-text);
     background: var(--btn-bg);
     text-decoration: none;
-    padding: var(--space-1) var(--space-2);
+    padding: var(--space-2) var(--space-3);
     border: var(--border-thin) solid var(--btn-border);
     border-radius: var(--radius-sm);
     box-shadow: var(--btn-shadow);
@@ -113,7 +115,6 @@ const navLinks = [
     align-items: center;
     justify-content: center;
     height: var(--size-nav-btn);
-    line-height: 1;
     box-sizing: border-box;
   }
 
@@ -130,7 +131,7 @@ const navLinks = [
   .toggle-wrapper {
     display: flex;
     align-items: center;
-    padding-left: var(--space-3);
+    padding-left: var(--space-4);
     border-left: var(--border-thin) solid var(--color-border);
   }
 
@@ -139,12 +140,13 @@ const navLinks = [
     .header-inner {
       flex-direction: column;
       align-items: flex-start;
-      gap: var(--space-3);
-      padding-block: var(--space-3);
+      gap: var(--space-4);
+      padding-block: var(--space-4);
     }
 
     .brand {
       font-size: var(--text-base);
+      line-height: var(--leading-base);
     }
 
     .nav-container {
@@ -156,8 +158,8 @@ const navLinks = [
   /* Large screens: more vertical breathing */
   @media (min-width: 64rem) {
     .header-inner {
-      padding-top: var(--space-6); /* Even more top space for laptops */
-      padding-bottom: var(--space-4);
+      padding-top: var(--space-12); /* Even more top space for laptops */
+      padding-bottom: var(--space-6);
     }
   }
 </style>

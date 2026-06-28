@@ -18,9 +18,14 @@ import MetricsTable from "../../components/MetricsTable.astro";
 
 type AnyPost = { [K in CollectionName]: CollectionEntry<K> }[CollectionName];
 
-type PostProps      = { type: "post";      meta: CategoryMeta; post: AnyPost };
-type DirectoryProps = { type: "directory"; meta: CategoryMeta; posts: AnyPost[]; activeDir: string };
-type Props          = PostProps | DirectoryProps;
+type PostProps = { type: "post"; meta: CategoryMeta; post: AnyPost };
+type DirectoryProps = {
+  type: "directory";
+  meta: CategoryMeta;
+  posts: AnyPost[];
+  activeDir: string;
+};
+type Props = PostProps | DirectoryProps;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -38,19 +43,23 @@ function titleCase(s: string): string {
  *
  * Result is sorted: series first (alpha), then posts newest-first.
  */
-function buildListItems(posts: AnyPost[], activeDir: string, categoryUrl: string): ListItem[] {
+function buildListItems(
+  posts: AnyPost[],
+  activeDir: string,
+  categoryUrl: string,
+): ListItem[] {
   const directPosts: AnyPost[] = [];
   const subdirGroups = new Map<string, AnyPost[]>();
 
   for (const post of posts) {
     const relId = activeDir ? post.id.slice(activeDir.length + 1) : post.id;
-    const parts  = relId.split("/");
+    const parts = relId.split("/");
 
     if (parts.length === 1) {
       directPosts.push(post);
     } else {
       const subdir = parts[0];
-      const group  = subdirGroups.get(subdir) ?? [];
+      const group = subdirGroups.get(subdir) ?? [];
       group.push(post);
       subdirGroups.set(subdir, group);
     }
@@ -62,7 +71,7 @@ function buildListItems(posts: AnyPost[], activeDir: string, categoryUrl: string
     if (groupPosts.length === 1) {
       items.push({ type: "post", post: groupPosts[0] });
     } else {
-      const subdirPath  = activeDir ? `${activeDir}/${subdir}` : subdir;
+      const subdirPath = activeDir ? `${activeDir}/${subdir}` : subdir;
       const subdirTitle = titleCase(subdir);
       items.push({
         type: "series",
@@ -77,20 +86,29 @@ function buildListItems(posts: AnyPost[], activeDir: string, categoryUrl: string
 
   return items.sort((a, b) => {
     if (a.type !== b.type) return a.type === "series" ? -1 : 1;
-    if (a.type === "series" && b.type === "series") return a.title.localeCompare(b.title);
+    if (a.type === "series" && b.type === "series")
+      return a.title.localeCompare(b.title);
     // Both posts — newest first
-    return (b as Extract<ListItem, { type: "post" }>).post.data.date.valueOf()
-         - (a as Extract<ListItem, { type: "post" }>).post.data.date.valueOf();
+    return (
+      (b as Extract<ListItem, { type: "post" }>).post.data.date.valueOf() -
+      (a as Extract<ListItem, { type: "post" }>).post.data.date.valueOf()
+    );
   });
 }
 
 // ─── Static path generation ───────────────────────────────────────────────────
 
 export async function getStaticPaths() {
-  const paths: { params: { category: string; slug: string | undefined }; props: Props }[] = [];
+  const paths: {
+    params: { category: string; slug: string | undefined };
+    props: Props;
+  }[] = [];
 
   for (const [category, meta] of Object.entries(CATEGORY_MAP)) {
-    const posts = await getCollection(meta.collection, ({ data }) => !data.draft) as AnyPost[];
+    const posts = (await getCollection(
+      meta.collection,
+      ({ data }) => !data.draft,
+    )) as AnyPost[];
 
     // Collect every unique subdirectory path at all nesting depths
     const directories = new Set<string>();
@@ -148,26 +166,29 @@ let headings: { depth: number; slug: string; text: string }[] = [];
 let seriesPosts: AnyPost[] = [];
 
 // ── Directory branch ─────────────────────────────────────────────────────────
-let pageTitle: string      = meta.title;
+let pageTitle: string = meta.title;
 let currentDirName: string = meta.title;
-let listItems: ListItem[]  = [];
-let activeDir              = "";
+let listItems: ListItem[] = [];
+let activeDir = "";
 
 if (type === "post") {
   const postProps = Astro.props as PostProps;
   post = postProps.post;
 
   const rendered = await render(post);
-  Content  = rendered.Content;
+  Content = rendered.Content;
   headings = rendered.headings;
 
   // Resolve sibling posts in the same directory (the series)
-  const pathParts  = post.id.split("/");
+  const pathParts = post.id.split("/");
   pathParts.pop(); // strip filename
   const seriesPath = pathParts.join("/");
 
   if (seriesPath) {
-    const allPosts = await getCollection(meta.collection, ({ data }) => !data.draft) as AnyPost[];
+    const allPosts = (await getCollection(
+      meta.collection,
+      ({ data }) => !data.draft,
+    )) as AnyPost[];
     seriesPosts = allPosts
       .filter((p) => {
         const pParts = p.id.split("/");
@@ -186,48 +207,52 @@ if (type === "post") {
     ? `${meta.title} / ${activeDir.replace(/\//g, " / ").replace(/-/g, " ")}`
     : meta.title;
 
-  currentDirName = activeDir ? titleCase(activeDir.split("/").pop()!) : meta.title;
+  currentDirName = activeDir
+    ? titleCase(activeDir.split("/").pop()!)
+    : meta.title;
 }
 ---
 
-{type === "post" && post && Content ? (
-  <PostLayout
-    title={post.data.title}
-    subtitle={post.data.subtitle}
-    author={post.data.author}
-    heroImage={post.data.heroImage}
-    description={post.data.description}
-    date={post.data.date}
-    category={meta.title}
-    categoryUrl={`/${category}`}
-    tags={post.data.tags}
-    headings={headings}
-    slug={post.id}
-    seriesPosts={seriesPosts}
-  >
-    <Content />
-  </PostLayout>
-) : type === "directory" ? (
-  <BaseLayout title={pageTitle} description={meta.description}>
-    <div class="category-container">
-      <div class="category-header">
-        <h1 class="category-subtitle">{meta.description}</h1>
-        <div class="breadcrumb-wrapper">
-          <Breadcrumb
-            category={meta.title}
-            categoryUrl={`/${category}`}
-            title={currentDirName}
-            slug={activeDir}
-          />
+{
+  type === "post" && post && Content ? (
+    <PostLayout
+      title={post.data.title}
+      subtitle={post.data.subtitle}
+      author={post.data.author}
+      heroImage={post.data.heroImage}
+      description={post.data.description}
+      date={post.data.date}
+      category={meta.title}
+      categoryUrl={`/${category}`}
+      tags={post.data.tags}
+      headings={headings}
+      slug={post.id}
+      seriesPosts={seriesPosts}
+    >
+      <Content />
+    </PostLayout>
+  ) : type === "directory" ? (
+    <BaseLayout title={pageTitle} description={meta.description}>
+      <div class="category-container">
+        <div class="category-header">
+          <h1 class="category-subtitle">{meta.description}</h1>
+          <div class="breadcrumb-wrapper">
+            <Breadcrumb
+              category={meta.title}
+              categoryUrl={`/${category}`}
+              title={currentDirName}
+              slug={activeDir}
+            />
+          </div>
+        </div>
+        <MetricsTable posts={(Astro.props as DirectoryProps).posts} />
+        <div class="posts-grid-container">
+          <PostList items={listItems} />
         </div>
       </div>
-      <MetricsTable posts={(Astro.props as DirectoryProps).posts} />
-      <div class="posts-grid-container">
-        <PostList items={listItems} />
-      </div>
-    </div>
-  </BaseLayout>
-) : null}
+    </BaseLayout>
+  ) : null
+}
 
 <style>
   .category-container {
@@ -237,12 +262,13 @@ if (type === "post") {
   .category-subtitle {
     font-family: var(--font-label);
     font-size: var(--text-xs);
+    line-height: var(--leading-xs);
     text-transform: uppercase;
     letter-spacing: var(--tracking-wide);
     color: var(--color-text-muted);
     margin-top: 0;
-    margin-bottom: var(--space-2);
-    line-height: var(--leading-body);
+    margin-bottom: var(--space-3);
+
     font-weight: var(--font-weight-medium);
   }
 
@@ -253,19 +279,19 @@ if (type === "post") {
   .category-header {
     max-width: var(--measure-grid);
     margin-inline: auto;
-    margin-bottom: var(--space-5);
+    margin-bottom: var(--space-8);
   }
 
   .posts-grid-container {
     max-width: var(--measure-grid);
     margin-inline: auto;
-    margin-bottom: var(--space-8);
+    margin-bottom: var(--space-24);
   }
 
   /* Scale up breathing room on larger screens */
   @media (min-width: 64rem) {
     .category-header {
-      margin-bottom: var(--space-6);
+      margin-bottom: var(--space-12);
     }
     .posts-grid-container {
       margin-bottom: var(--space-hero);

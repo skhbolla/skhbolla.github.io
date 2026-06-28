@@ -67,8 +67,8 @@
   /* ─── Back-to-top ───────────────────────────────────────────────────────── */
   #back-to-top {
     position: fixed;
-    bottom: var(--space-5);
-    right: var(--space-5);
+    bottom: var(--space-8);
+    right: var(--space-8);
 
     /* Size & shape — matches nav buttons */
     width: var(--size-nav-btn);
@@ -79,7 +79,7 @@
     /* Typography */
     font-family: var(--font-label);
     font-size: var(--text-icon);
-    line-height: 1;
+    
 
     /* Theming — reuses the flat retro button system */
     color: var(--color-text);
@@ -98,7 +98,7 @@
     /* Entry/exit animation */
     opacity: 0;
     visibility: hidden;
-    transform: translateY(var(--space-2));
+    transform: translateY(var(--space-3));
     transition:
       opacity var(--transition-fast),
       transform var(--transition-fast),
@@ -130,8 +130,8 @@
   /* Smaller offset on tiny screens to avoid overlapping content */
   @media (max-width: 35rem) {
     #back-to-top {
-      bottom: var(--space-3);
-      right: var(--space-3);
+      bottom: var(--space-4);
+      right: var(--space-4);
     }
   }
 

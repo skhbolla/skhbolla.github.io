@@ -35,14 +35,14 @@
 
 <style>
   .site-footer {
-    margin-top: var(--space-6);
+    margin-top: var(--space-12);
     width: 100%;
   }
 
   .footer-inner {
     max-width: var(--measure-grid);
     margin-inline: auto;
-    padding-bottom: var(--space-5);
+    padding-bottom: var(--space-8);
   }
 
   .divider {
@@ -54,8 +54,9 @@
     color: var(--color-text-muted);
     font-family: var(--font-label);
     font-size: var(--text-xs);
-    line-height: 1;
-    margin-bottom: var(--space-6);
+    line-height: var(--leading-xs);
+    
+    margin-bottom: var(--space-12);
   }
 
   .fade {
@@ -73,10 +74,11 @@
     display: grid;
     grid-template-columns: 1fr max-content 1fr;
     align-items: baseline; /* Baseline prevents sub-pixel smearing of pixel fonts */
-    gap: var(--space-4);
+    gap: var(--space-6);
     color: var(--color-text);
     font-family: var(--font-label);
     font-size: var(--text-xs);
+    line-height: var(--leading-xs);
     font-weight: var(--font-weight-medium); /* One unified format everywhere */
     text-transform: uppercase;
     letter-spacing: var(--tracking-wide);
@@ -88,7 +90,7 @@
 
   .shoutouts {
     margin: 0;
-    line-height: var(--leading-body);
+    
     text-align: center; /* Explicit center justification */
   }
 

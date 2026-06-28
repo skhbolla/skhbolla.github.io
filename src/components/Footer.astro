@@ -6,24 +6,28 @@
   <div class="footer-inner">
     <div class="divider" aria-hidden="true" role="presentation">
       <span class="fade">░▒▓</span>
-      <span class="fill">▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚</span>
+      <span class="fill"
+        >▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚</span
+      >
       <span class="fade">▓▒░</span>
     </div>
     <div class="footer-content">
-      <div class="footer-brand">
-        | SRIKANTH BOLLA |
-      </div>
+      <div class="footer-brand">| SRIKANTH BOLLA |</div>
 
       <p class="shoutouts">
-        THEME INSPIRED BY <a
-          href="https://makingsoftware.com"
-          target="_blank"
-          rel="noopener noreferrer">MAKINGSOFTWARE.COM</a>
+        MADE WITH <a href="https://astro.build/">ASTRO</a>
         <br />
         HOSTED WITH ♥ ON <a
           href="https://github.com/skhbolla/skhbolla.github.io/"
           target="_blank"
-          rel="noopener noreferrer">GITHUB</a>
+          rel="noopener noreferrer">GITHUB</a
+        >
+        <br />
+        THEME INSPIRED BY <a
+          href="https://makingsoftware.com"
+          target="_blank"
+          rel="noopener noreferrer">MAKINGSOFTWARE.COM</a
+        >
       </p>
 
       <div class="copyright">
@@ -55,7 +59,7 @@
     font-family: var(--font-label);
     font-size: var(--text-xs);
     line-height: var(--leading-xs);
-    
+
     margin-bottom: var(--space-12);
   }
 
@@ -90,7 +94,7 @@
 
   .shoutouts {
     margin: 0;
-    
+
     text-align: center; /* Explicit center justification */
   }
 
@@ -99,7 +103,9 @@
     text-decoration: underline;
     text-decoration-color: var(--color-text-muted);
     text-underline-offset: var(--underline-offset);
-    transition: color var(--transition-base), text-decoration-color var(--transition-base);
+    transition:
+      color var(--transition-base),
+      text-decoration-color var(--transition-base);
   }
 
   .shoutouts a:hover {
@@ -116,7 +122,8 @@
     .footer-content {
       grid-template-columns: 1fr;
     }
-    .footer-brand, .copyright {
+    .footer-brand,
+    .copyright {
       text-align: center;
     }
   }

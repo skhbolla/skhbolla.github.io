@@ -35,20 +35,20 @@ function truncate(str: string) {
   <span class="label divider" aria-hidden="true">/</span>
   {
     slug ? (
-      <>
+      <Fragment>
         <a href={categoryUrl} class="label" title={category}>
           {truncate(category)}
         </a>
 
         {intermediateBreadcrumbs.map((trail) => (
-          <>
+          <Fragment>
             <span class="label divider" aria-hidden="true">
               /
             </span>
             <a href={trail.url} class="label" title={trail.label}>
               {truncate(trail.label)}
             </a>
-          </>
+          </Fragment>
         ))}
 
         <span class="label divider" aria-hidden="true">
@@ -57,7 +57,7 @@ function truncate(str: string) {
         <span class="label current" aria-current="page" title={title}>
           {truncate(title)}
         </span>
-      </>
+      </Fragment>
     ) : (
       <span class="label current" aria-current="page" title={category}>
         {truncate(category)}

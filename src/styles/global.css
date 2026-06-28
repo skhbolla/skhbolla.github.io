@@ -13,6 +13,7 @@ html {
   */
   scroll-padding-top: var(--scroll-padding);
   font-size: var(--font-size-root);
+  background-color: var(--color-bg);
   /* Default baseline */
 }
 

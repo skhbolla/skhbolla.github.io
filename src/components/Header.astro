@@ -45,13 +45,14 @@ const navLinks = [
 
 <style>
   .site-header {
-    border-bottom: var(--border-thin) solid var(--color-border);
+    /* Removed border to allow the header to flow naturally into the body */
   }
 
   .header-inner {
     max-width: var(--measure);
     margin-inline: auto;
-    padding-block: var(--space-5);
+    padding-top: var(--space-5); /* Increased top space for tablets */
+    padding-bottom: var(--space-3);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -155,7 +156,8 @@ const navLinks = [
   /* Large screens: more vertical breathing */
   @media (min-width: 64rem) {
     .header-inner {
-      padding-block: var(--space-6);
+      padding-top: var(--space-6); /* Even more top space for laptops */
+      padding-bottom: var(--space-4);
     }
   }
 </style>

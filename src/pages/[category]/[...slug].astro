@@ -8,6 +8,7 @@ import type { ListItem } from "../../components/PostList.astro";
 import { CATEGORY_MAP } from "../../utils/categories";
 import type { CollectionName, CategoryMeta } from "../../utils/categories";
 import Breadcrumb from "../../components/Breadcrumb.astro";
+import MetricsTable from "../../components/MetricsTable.astro";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 //
@@ -220,6 +221,7 @@ if (type === "post") {
           />
         </div>
       </div>
+      <MetricsTable posts={(Astro.props as DirectoryProps).posts} />
       <div class="posts-grid-container">
         <PostList items={listItems} />
       </div>

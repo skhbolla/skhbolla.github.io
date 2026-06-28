@@ -6,26 +6,29 @@
   <div class="footer-inner">
     <div class="divider" aria-hidden="true" role="presentation">
       <span class="fade">░▒▓</span>
-      <span class="fill"
-        >██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████</span
-      >
+      <span class="fill">▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚▚</span>
       <span class="fade">▓▒░</span>
     </div>
     <div class="footer-content">
+      <div class="footer-brand">
+        | SRIKANTH BOLLA |
+      </div>
+
       <p class="shoutouts">
-        Theme inspired by <a
+        THEME INSPIRED BY <a
           href="https://makingsoftware.com"
           target="_blank"
-          rel="noopener noreferrer">Makingsoftware.com</a
-        > • Hosted with ♥ on <a
+          rel="noopener noreferrer">MAKINGSOFTWARE.COM</a>
+        <br />
+        HOSTED WITH ♥ ON <a
           href="https://github.com/skhbolla/skhbolla.github.io/"
           target="_blank"
-          rel="noopener noreferrer">GitHub</a
-        >
+          rel="noopener noreferrer">GITHUB</a>
       </p>
-      <p class="copyright">
-        &copy; {new Date().getFullYear()} Srikanth Bolla
-      </p>
+
+      <div class="copyright">
+        | &copy; {new Date().getFullYear()} |
+      </div>
     </div>
   </div>
 </footer>
@@ -52,7 +55,7 @@
     font-family: var(--font-label);
     font-size: var(--text-xs);
     line-height: 1;
-    margin-bottom: var(--space-3);
+    margin-bottom: var(--space-6);
   }
 
   .fade {
@@ -63,31 +66,55 @@
     flex-grow: 1;
     overflow: hidden;
     text-overflow: clip;
-    letter-spacing: var(--tracking-brand);
+    letter-spacing: var(--tracking-normal);
   }
 
   .footer-content {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    color: var(--color-text-muted);
+    display: grid;
+    grid-template-columns: 1fr max-content 1fr;
+    align-items: baseline; /* Baseline prevents sub-pixel smearing of pixel fonts */
+    gap: var(--space-4);
+    color: var(--color-text);
     font-family: var(--font-label);
     font-size: var(--text-xs);
+    font-weight: var(--font-weight-medium); /* One unified format everywhere */
     text-transform: uppercase;
     letter-spacing: var(--tracking-wide);
   }
 
-  .shoutouts,
-  .copyright {
-    margin: 0;
+  .footer-brand {
+    text-align: left;
   }
 
-  /* Responsive styling for smaller devices */
+  .shoutouts {
+    margin: 0;
+    line-height: var(--leading-body);
+    text-align: center; /* Explicit center justification */
+  }
+
+  .shoutouts a {
+    color: var(--color-text);
+    text-decoration: underline;
+    text-decoration-color: var(--color-text-muted);
+    text-underline-offset: var(--underline-offset);
+    transition: color var(--transition-base), text-decoration-color var(--transition-base);
+  }
+
+  .shoutouts a:hover {
+    color: var(--color-accent);
+    text-decoration-color: var(--color-accent);
+  }
+
+  .copyright {
+    text-align: right;
+  }
+
+  /* Responsive styling using the existing standard mobile breakpoint */
   @media (max-width: 48rem) {
     .footer-content {
-      flex-direction: column;
-      gap: var(--space-2);
+      grid-template-columns: 1fr;
+    }
+    .footer-brand, .copyright {
       text-align: center;
     }
   }

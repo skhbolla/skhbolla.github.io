@@ -1,0 +1,96 @@
+---
+import { calculateMetrics, formatStatValue } from "../utils/metrics";
+
+export interface Props {
+  posts: any[];
+  collectionsCount?: number;
+}
+
+const { posts, collectionsCount } = Astro.props;
+const metrics = calculateMetrics(posts);
+
+// 6 total items to balance a 3x2 grid.
+const items = collectionsCount
+  ? [
+      { label: "COLLECTIONS", value: collectionsCount },
+      { label: "TOTAL WORDS", value: metrics.words },
+      { label: "TOTAL SERIES", value: metrics.series },
+      { label: "LAST UPDATED", value: metrics.lastUpdated },
+      { label: "TOTAL POSTS", value: metrics.posts },
+      { label: "CODE BLOCKS", value: metrics.codeBlocks },
+    ]
+  : [
+      { label: "SERIES", value: metrics.series },
+      { label: "TOTAL WORDS", value: metrics.words },
+      { label: "POSTS", value: metrics.posts },
+      {
+        label: "WORDS/POST",
+        value:
+          metrics.posts > 0 ? Math.round(metrics.words / metrics.posts) : 0,
+      },
+      { label: "LAST UPDATED", value: metrics.lastUpdated },
+      { label: "CODE BLOCKS", value: metrics.codeBlocks },
+    ];
+---
+
+<div class="metrics-wrapper">
+  <dl class="metrics-grid">
+    {
+      items.map((item) => (
+        <div class="metric-item">
+          <dt class="metric-label">{item.label}:</dt>
+          <dd class="metric-value">{formatStatValue(item.value)}</dd>
+        </div>
+      ))
+    }
+  </dl>
+</div>
+
+<style>
+  .metrics-wrapper {
+    margin: var(--space-7) auto;
+    width: 100%;
+    max-width: var(--measure);
+    padding: 0 var(--space-3);
+  }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-6);
+    row-gap: var(--space-3);
+    margin: 0;
+    padding: 0;
+  }
+
+  .metric-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    width: 100%;
+  }
+
+  .metric-label {
+    font-family: var(--font-label);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .metric-value {
+    font-family: var(--font-label);
+    font-size: var(--text-xs);
+    color: var(--color-text);
+    text-align: right;
+    font-weight: var(--font-weight-bold);
+    margin: 0;
+  }
+
+  @media (max-width: 35rem) {
+    .metrics-grid {
+      grid-template-columns: minmax(0, 1fr);
+      column-gap: 0;
+    }
+  }
+</style>

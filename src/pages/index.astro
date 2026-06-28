@@ -1,6 +1,17 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Footer from "../components/Footer.astro";
+import MetricsTable from "../components/MetricsTable.astro";
+import { getCollection } from "astro:content";
+import { CATEGORY_MAP } from "../utils/categories";
+
+const allPosts = await Promise.all(
+  Object.values(CATEGORY_MAP).map((meta) =>
+    getCollection(meta.collection, ({ data }) => !data.draft)
+  )
+);
+const flatPosts = allPosts.flat();
+const collectionsCount = Object.keys(CATEGORY_MAP).length;
 ---
 
 <BaseLayout title="Home">
@@ -17,5 +28,8 @@ import Footer from "../components/Footer.astro";
     </p>
     <p>Pick a path above, or just start reading.</p>
   </div>
+  
+  <MetricsTable posts={flatPosts} collectionsCount={collectionsCount} />
+  
   <Footer />
 </BaseLayout>

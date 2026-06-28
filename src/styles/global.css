@@ -311,7 +311,7 @@ time,
   }
 
   main {
-    padding-block: var(--space-12);
+    padding-block: var(--space-10);
   }
 }
 
@@ -324,7 +324,7 @@ time,
   }
 
   main {
-    padding-block: var(--space-18);
+    padding-block: var(--space-12);
   }
 }
 
@@ -340,14 +340,14 @@ time,
 /* ≥ 1024px — proper desktops */
 @media (min-width: 64rem) {
   main {
-    padding-block: var(--space-24);
+    padding-block: var(--space-16);
   }
 }
 
 /* ≥ 1440px — wide screens — let it breathe vertically */
 @media (min-width: 80rem) {
   main {
-    padding-block: var(--space-hero);
+    padding-block: var(--space-16);
   }
 }
 

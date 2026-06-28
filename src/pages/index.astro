@@ -16,22 +16,34 @@ const allPosts = await Promise.all(
   ),
 );
 
-const collectionItems: ListItem[] = categoryEntries.map(([slug, meta], index) => ({
-  type: "collection",
-  id: slug,
-  title: meta.title,
-  description: meta.description,
-  postCount: allPosts[index].length,
-  url: `/${slug}/`,
-}));
+const collectionItems: ListItem[] = categoryEntries.map(
+  ([slug, meta], index) => ({
+    type: "collection",
+    id: slug,
+    title: meta.title,
+    description: meta.description,
+    postCount: allPosts[index].length,
+    url: `/${slug}/`,
+  }),
+);
 
 const flatPosts = allPosts.flat();
 const collectionsCount = categoryEntries.length;
 ---
 
 <BaseLayout title="Home">
+  <div class="hero-container">
+    <img
+      src="/homepage_hero.png"
+      alt="Hero Image"
+      class="hero-image"
+      loading="eager"
+    />
+  </div>
+
+  <MetricsTable posts={flatPosts} collectionsCount={collectionsCount} />
+
   <div class="prose">
-    <h1>Three threads, one site</h1>
     <p>
       This is where I write about three things: how computers actually work
       underneath the abstractions (<a href="/mech-sympathy/"
@@ -41,19 +53,37 @@ const collectionsCount = categoryEntries.length;
         >system design</a
       >).
     </p>
-    <p>Pick a path above, or just start reading.</p>
+    <h3>Pick a collection from below and just start reading.</h3>
   </div>
-  
-  <MetricsTable posts={flatPosts} collectionsCount={collectionsCount} />
 
   <div class="posts-grid-container">
     <PostList items={collectionItems} />
   </div>
-  
+
   <Footer />
 </BaseLayout>
 
 <style>
+  .hero-container {
+    display: flex;
+    justify-content: center;
+    max-width: var(--measure);
+    margin-inline: auto;
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-12);
+    width: 100%;
+  }
+
+  .hero-image {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-paper);
+    border: var(--border-thin) solid var(--color-card-border);
+  }
+
   .posts-grid-container {
     max-width: var(--measure-grid);
     margin-inline: auto;

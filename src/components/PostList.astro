@@ -15,7 +15,16 @@ export interface PostItem {
   post: any;
 }
 
-export type ListItem = SeriesItem | PostItem;
+export interface CollectionItem {
+  type: "collection";
+  id: string;
+  title: string;
+  description: string;
+  postCount: number;
+  url: string;
+}
+
+export type ListItem = SeriesItem | PostItem | CollectionItem;
 
 interface Props {
   items: ListItem[];
@@ -37,21 +46,25 @@ function getCategorySlug(collectionName: string): string {
 <ul class="post-grid">
   {
     items.map((item) => {
-      if (item.type === "series") {
+      if (item.type === "series" || item.type === "collection") {
         return (
           <li class="post-item">
             <div class="series-stack">
               <div class="back-card" />
               <a href={item.url} class="post-card front-card">
                 <div class="card-meta">
-                  <span class="category-badge series-badge">Series</span>
-                  <span class="post-count">{item.postCount} parts</span>
+                  <span class="category-badge series-badge">
+                    {item.type === "series" ? "Series" : "Collection"}
+                  </span>
+                  <span class="post-count">
+                    {item.postCount} {item.type === "series" ? "parts" : "posts"}
+                  </span>
                 </div>
                 <h3 class="card-title">{item.title}</h3>
                 <p class="card-description">{item.description}</p>
                 <div class="card-footer">
                   <span class="read-link">
-                    Open Series <span class="arrow">↳</span>
+                    Open {item.type === "series" ? "Series" : "Collection"} <span class="arrow">↳</span>
                   </span>
                 </div>
               </a>

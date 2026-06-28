@@ -5,13 +5,28 @@ import MetricsTable from "../components/MetricsTable.astro";
 import { getCollection } from "astro:content";
 import { CATEGORY_MAP } from "../utils/categories";
 
+import PostList from "../components/PostList.astro";
+import type { ListItem } from "../components/PostList.astro";
+
+const categoryEntries = Object.entries(CATEGORY_MAP);
+
 const allPosts = await Promise.all(
-  Object.values(CATEGORY_MAP).map((meta) =>
-    getCollection(meta.collection, ({ data }) => !data.draft)
-  )
+  categoryEntries.map(([_, meta]) =>
+    getCollection(meta.collection, ({ data }) => !data.draft),
+  ),
 );
+
+const collectionItems: ListItem[] = categoryEntries.map(([slug, meta], index) => ({
+  type: "collection",
+  id: slug,
+  title: meta.title,
+  description: meta.description,
+  postCount: allPosts[index].length,
+  url: `/${slug}/`,
+}));
+
 const flatPosts = allPosts.flat();
-const collectionsCount = Object.keys(CATEGORY_MAP).length;
+const collectionsCount = categoryEntries.length;
 ---
 
 <BaseLayout title="Home">
@@ -30,6 +45,26 @@ const collectionsCount = Object.keys(CATEGORY_MAP).length;
   </div>
   
   <MetricsTable posts={flatPosts} collectionsCount={collectionsCount} />
+
+  <div class="posts-grid-container">
+    <PostList items={collectionItems} />
+  </div>
   
   <Footer />
 </BaseLayout>
+
+<style>
+  .posts-grid-container {
+    max-width: var(--measure-grid);
+    margin-inline: auto;
+    margin-top: var(--space-7);
+    margin-bottom: var(--space-8);
+  }
+
+  @media (min-width: 64rem) {
+    .posts-grid-container {
+      margin-top: var(--space-8);
+      margin-bottom: var(--space-hero);
+    }
+  }
+</style>

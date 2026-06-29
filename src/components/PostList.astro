@@ -155,7 +155,7 @@ function getCategorySlug(collectionName: string): string {
   /* Hover micro-animations */
   .series-stack:hover .front-card {
     transform: translateY(calc(var(--space-pixel) * -3)) rotate(var(--transform-rotate-hover));
-    border-color: var(--color-accent);
+    border-color: var(--color-series-badge);
     box-shadow: var(--shadow-paper-hover);
   }
 
@@ -165,10 +165,9 @@ function getCategorySlug(collectionName: string): string {
   }
 
   .series-badge {
-    /* Splash of color: Solid Cobalt for Series */
-    background: var(--color-accent);
+    background: var(--color-series-badge);
     color: var(--color-bg);
-    border-color: var(--color-accent);
+    border-color: var(--color-series-badge);
   }
 
   .post-count {

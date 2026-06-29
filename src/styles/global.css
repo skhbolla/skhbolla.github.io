@@ -215,11 +215,11 @@ time,
   font-family: var(--font-label);
   font-size: var(--text-xs);
     line-height: var(--leading-xs);
-  color: var(--color-accent); /* Colored numbers */
+  color: var(--color-list-marker); /* Colored numbers */
 }
 
 .prose ul li::marker {
-  color: var(--color-accent); /* Colored square bullets */
+  color: var(--color-list-marker); /* Colored square bullets */
 }
 
 /* Horizontal rule */

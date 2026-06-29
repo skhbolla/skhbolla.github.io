@@ -62,6 +62,13 @@
    --color-blockquote-border: var(--base0E);
    --color-kbd-bg: var(--base01);
    --color-table-header: var(--base01);
+   --color-list-marker: var(--base0F);
+   --color-meta-divider: var(--base08);
+   --color-series-badge: var(--base0B);
+   --color-nav-active: var(--base0A);
+   
+   --shadow-base: var(--base05);
+   --highlight-base: var(--base07);
 
    --color-highlight-bg: var(--base0A);
    --color-highlight-text: var(--base05);
@@ -73,13 +80,13 @@
    --btn-bg-active: var(--base02);
    --btn-border: var(--base03);
    --btn-border-hover: var(--base04);
-   --btn-shadow: inset 1px 1px 0px 1px rgba(255, 255, 255, 0.75), inset -1px -1px 0px 1px rgba(0, 0, 0, 0.10);
-   --btn-shadow-active: inset 1px 1px 0px 1px rgba(0, 0, 0, 0.15), inset -1px -1px 0px 1px rgba(255, 255, 255, 0.2);
+   --btn-shadow: inset 1px 1px 0px 1px color-mix(in srgb, var(--highlight-base) 75%, transparent), inset -1px -1px 0px 1px color-mix(in srgb, var(--shadow-base) 10%, transparent);
+   --btn-shadow-active: inset 1px 1px 0px 1px color-mix(in srgb, var(--shadow-base) 15%, transparent), inset -1px -1px 0px 1px color-mix(in srgb, var(--highlight-base) 20%, transparent);
 
-   --shadow-paper: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.02);
-   --shadow-paper-hover: 0 12px 24px -10px rgba(0, 0, 0, 0.08), 0 4px 8px -4px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.02);
+   --shadow-paper: 0 4px 6px -1px color-mix(in srgb, var(--shadow-base) 5%, transparent), 0 2px 4px -2px color-mix(in srgb, var(--shadow-base) 5%, transparent), 0 0 0 1px color-mix(in srgb, var(--shadow-base) 2%, transparent);
+   --shadow-paper-hover: 0 12px 24px -10px color-mix(in srgb, var(--shadow-base) 8%, transparent), 0 4px 8px -4px color-mix(in srgb, var(--shadow-base) 4%, transparent), 0 0 0 1px color-mix(in srgb, var(--shadow-base) 2%, transparent);
    --color-paper-glass: color-mix(in srgb, var(--color-bg) 85%, transparent);
-   --color-card-border: rgba(0, 0, 0, 0.04);
+   --color-card-border: var(--base02);
 }
 
 /* ─── Dark (Base16) ────────────────────────────────────────────────────────── */
@@ -121,6 +128,13 @@
    --color-blockquote-border: var(--base0E);
    --color-kbd-bg: var(--base01);
    --color-table-header: var(--base01);
+   --color-list-marker: var(--base0F);
+   --color-meta-divider: var(--base08);
+   --color-series-badge: var(--base0B);
+   --color-nav-active: var(--base0A);
+   
+   --shadow-base: #000000;
+   --highlight-base: var(--base05);
 
    --color-highlight-bg: var(--base0A);
    --color-highlight-text: var(--base00); /* Deepest contrast for highlights */
@@ -132,11 +146,11 @@
    --btn-bg-active: var(--base02);
    --btn-border: var(--base03);
    --btn-border-hover: var(--base04);
-   --btn-shadow: inset 1px 1px 0px 1px rgba(255, 255, 255, 0.05), inset -1px -1px 0px 1px rgba(0, 0, 0, 0.3);
-   --btn-shadow-active: inset 1px 1px 0px 1px rgba(0, 0, 0, 0.4), inset -1px -1px 0px 1px rgba(255, 255, 255, 0.02);
+   --btn-shadow: inset 1px 1px 0px 1px color-mix(in srgb, var(--highlight-base) 5%, transparent), inset -1px -1px 0px 1px color-mix(in srgb, var(--shadow-base) 30%, transparent);
+   --btn-shadow-active: inset 1px 1px 0px 1px color-mix(in srgb, var(--shadow-base) 40%, transparent), inset -1px -1px 0px 1px color-mix(in srgb, var(--highlight-base) 2%, transparent);
 
-   --shadow-paper: inset 0 1px 0 0 rgba(255, 255, 255, 0.05), 0 4px 24px rgba(0, 0, 0, 0.2);
-   --shadow-paper-hover: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 8px 30px rgba(0, 0, 0, 0.35);
+   --shadow-paper: inset 0 1px 0 0 color-mix(in srgb, var(--highlight-base) 5%, transparent), 0 4px 24px color-mix(in srgb, var(--shadow-base) 20%, transparent);
+   --shadow-paper-hover: inset 0 1px 0 0 color-mix(in srgb, var(--highlight-base) 8%, transparent), 0 8px 30px color-mix(in srgb, var(--shadow-base) 35%, transparent);
    --color-paper-glass: color-mix(in srgb, var(--color-bg) 85%, transparent);
    --color-card-border: var(--color-border);
 }

@@ -1,0 +1,123 @@
+---
+---
+
+<div id="top-observer-pixel"></div>
+<button id="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
+
+<script>
+  const setupReturnToTop = () => {
+    const btn = document.getElementById("back-to-top");
+    const pixel = document.getElementById("top-observer-pixel");
+    
+    if (!btn || !pixel) return;
+
+    btn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // The div is 400px tall and sits at the very top of the page.
+        // Once we scroll past it (> 400px), isIntersecting becomes false.
+        const isVisible = !entries[0].isIntersecting;
+        btn.classList.toggle("is-visible", isVisible);
+      },
+      { threshold: 0 }
+    );
+
+    observer.observe(pixel);
+  };
+
+  setupReturnToTop();
+  document.addEventListener("astro:page-load", setupReturnToTop);
+</script>
+
+<style>
+  #top-observer-pixel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 400px; /* Trigger threshold */
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  /* ─── Back-to-top ───────────────────────────────────────────────────────── */
+  #back-to-top {
+    position: fixed;
+    bottom: var(--space-8);
+    right: var(--space-8);
+
+    /* Size & shape — matches nav buttons */
+    width: var(--size-nav-btn);
+    height: var(--size-nav-btn);
+    padding: 0;
+    box-sizing: border-box;
+
+    /* Typography */
+    font-family: var(--font-label);
+    font-size: var(--text-icon);
+    
+
+    /* Theming — reuses the flat retro button system */
+    color: var(--color-text);
+    background: var(--btn-bg);
+    border: var(--border-thin) solid var(--btn-border);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--btn-shadow);
+    cursor: pointer;
+
+    /* Layout */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+
+    /* Entry/exit animation */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(var(--space-3));
+    transition:
+      opacity var(--transition-fast),
+      transform var(--transition-fast),
+      border-color var(--transition-fast),
+      /* delay visibility OFF so it fades out before disappearing */ visibility
+        0s var(--transition-fast);
+  }
+
+  #back-to-top.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition:
+      opacity var(--transition-fast),
+      transform var(--transition-fast),
+      border-color var(--transition-fast),
+      visibility 0s; /* no delay when becoming visible */
+  }
+
+  #back-to-top:hover {
+    border-color: var(--btn-border-hover);
+  }
+
+  #back-to-top:active {
+    background: var(--btn-bg-active);
+    box-shadow: var(--btn-shadow-active);
+  }
+
+  /* Smaller offset on tiny screens to avoid overlapping content */
+  @media (max-width: 35rem) {
+    #back-to-top {
+      bottom: var(--space-4);
+      right: var(--space-4);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #back-to-top,
+    #back-to-top.is-visible {
+      transition: none;
+    }
+  }
+</style>

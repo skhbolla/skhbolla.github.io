@@ -50,15 +50,16 @@ const items = collectionsCount
   .metrics-wrapper {
     margin: var(--space-18) auto;
     width: 100%;
-    max-width: var(--measure);
+    max-width: 32rem;
     padding: 0 var(--space-4);
   }
 
   .metrics-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: var(--space-12);
-    row-gap: var(--space-4);
+    grid-template-columns: auto auto;
+    justify-content: center;
+    column-gap: var(--space-24);
+    row-gap: var(--space-2);
     margin: 0;
     padding: 0;
   }
@@ -68,6 +69,7 @@ const items = collectionsCount
     justify-content: space-between;
     align-items: baseline;
     width: 100%;
+    gap: var(--space-8);
   }
 
   .metric-label {
@@ -91,7 +93,7 @@ const items = collectionsCount
 
   @media (max-width: 40rem) {
     .metrics-grid {
-      grid-template-columns: minmax(0, 1fr);
+      grid-template-columns: auto;
       column-gap: 0;
     }
   }

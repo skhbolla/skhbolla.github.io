@@ -58,6 +58,7 @@
 
    --color-highlight-bg: var(--base0A);
    --color-highlight-text: var(--base05);
+   --color-inline-code: var(--base09);
 
    /* Derived Visuals */
    --btn-bg: rgba(255, 255, 255, 0.5);
@@ -108,6 +109,7 @@
 
    --color-highlight-bg: var(--base03);
    --color-highlight-text: var(--base09); /* Gold for high contrast highlights */
+   --color-inline-code: var(--base09);
 
    /* Derived Visuals */
    --btn-bg: rgba(0, 0, 0, 0.2);

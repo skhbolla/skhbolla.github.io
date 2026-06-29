@@ -234,16 +234,14 @@ if (type === "post") {
   ) : type === "directory" ? (
     <BaseLayout title={pageTitle} description={meta.description}>
       <div class="category-container">
+        <Breadcrumb
+          category={meta.title}
+          categoryUrl={`/${category}`}
+          title={currentDirName}
+          slug={activeDir}
+        />
         <div class="category-header">
           <h1 class="category-subtitle">{meta.description}</h1>
-          <div class="breadcrumb-wrapper">
-            <Breadcrumb
-              category={meta.title}
-              categoryUrl={`/${category}`}
-              title={currentDirName}
-              slug={activeDir}
-            />
-          </div>
         </div>
         <MetricsTable posts={(Astro.props as DirectoryProps).posts} />
         <div class="posts-grid-container">
@@ -256,6 +254,7 @@ if (type === "post") {
 
 <style>
   .category-container {
+    max-width: var(--measure-grid);
     margin-inline: auto;
   }
 
@@ -270,10 +269,6 @@ if (type === "post") {
     margin-bottom: var(--space-3);
 
     font-weight: var(--font-weight-medium);
-  }
-
-  .breadcrumb-wrapper {
-    width: 100%;
   }
 
   .category-header {

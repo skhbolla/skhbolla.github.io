@@ -45,3 +45,5 @@ cache line, not the byte, is the real unit of cost.
 This post is `.mdx` specifically because of the diagram component above —
 everything that doesn't need an embedded component stays in plain `.md`,
 like the binary search post in the DSA section.
+
+*(Note: Try pressing <kbd>Ctrl</kbd> + <kbd>C</kbd> on the code block above to copy it to your clipboard!)*

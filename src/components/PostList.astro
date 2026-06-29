@@ -218,9 +218,9 @@ function getCategorySlug(collectionName: string): string {
     font-family: var(--font-label);
     font-size: var(--text-micro);
     line-height: var(--leading-micro);
-    /* Splash of color: Amber highlight for posts */
-    background: var(--color-highlight-bg);
-    color: var(--color-highlight-text);
+    /* Semantic Tag Coloring */
+    background: var(--color-code-bg);
+    color: var(--color-tag);
     border: var(--border-thin) solid transparent;
     padding: var(--space-nano) var(--space-micro);
     border-radius: var(--radius-sm);
@@ -233,9 +233,9 @@ function getCategorySlug(collectionName: string): string {
   }
 
   .post-card:hover .category-badge {
-    border-color: var(--color-accent);
+    border-color: var(--color-tag);
     background: var(--color-bg);
-    color: var(--color-accent);
+    color: var(--color-tag);
   }
 
   .card-meta time {

@@ -81,6 +81,7 @@
     transition:
       opacity var(--transition-fast),
       transform var(--transition-fast),
+      background var(--transition-fast),
       border-color var(--transition-fast),
       /* delay visibility OFF so it fades out before disappearing */ visibility
         0s var(--transition-fast);
@@ -93,12 +94,14 @@
     transition:
       opacity var(--transition-fast),
       transform var(--transition-fast),
+      background var(--transition-fast),
       border-color var(--transition-fast),
       visibility 0s; /* no delay when becoming visible */
   }
 
   #back-to-top:hover {
     border-color: var(--btn-border-hover);
+    background: var(--btn-bg-hover);
   }
 
   #back-to-top:active {

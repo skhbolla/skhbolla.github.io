@@ -115,6 +115,7 @@ time,
 
 ::selection {
   background-color: var(--color-highlight-bg);
+  color: var(--color-highlight-text);
   text-decoration-line: underline;
   text-decoration-style: dotted;
   text-decoration-thickness: var(--border-thick);
@@ -138,7 +139,7 @@ time,
 .prose h1,
 .prose h2,
 .prose h3 {
-  
+  color: var(--color-heading);
   font-weight: var(--font-weight-semibold);
   margin-top: var(--space-12);
   margin-bottom: var(--space-3);
@@ -179,8 +180,8 @@ time,
 }
 
 .prose a:hover {
-  color: var(--color-link);
-  text-decoration-color: var(--color-link);
+  color: var(--color-link-hover);
+  text-decoration-color: var(--color-link-hover);
   text-decoration-style: dotted;
 }
 
@@ -188,10 +189,9 @@ time,
 .prose blockquote {
   margin: var(--space-6) 0;
   padding-left: var(--space-6);
-  /* Splash of color: cobalt border for quotes */
-  border-left: var(--border-thick) solid var(--color-accent);
+  border-left: var(--border-thick) solid var(--color-blockquote-border);
   color: var(--color-text-muted);
-  background: color-mix(in srgb, var(--color-accent) 5%, transparent);
+  background: transparent;
   padding: var(--space-4) var(--space-6);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
@@ -225,21 +225,37 @@ time,
 /* Horizontal rule */
 .prose hr {
   border: none;
-  /* Splash of color */
-  border-top: var(--border-thin) dashed var(--color-accent);
+  border-top: var(--border-thin) dashed var(--color-border);
   opacity: 0.4;
   margin: var(--space-12) 0;
 }
 
-/* Code */
-.prose code,
-.prose kbd {
+/* Code & Markdown Components */
+.prose code {
   background: var(--color-code-bg);
   color: var(--color-inline-code);
   border-radius: var(--radius-sm);
   padding: var(--space-nano) var(--space-2);
   font-size: var(--text-xs);
     line-height: var(--leading-xs);
+}
+
+.prose kbd {
+  background: var(--color-kbd-bg);
+  color: var(--color-text);
+  border: var(--border-thin) solid var(--color-border);
+  border-bottom-width: var(--border-thick);
+  border-radius: var(--radius-sm);
+  padding: var(--space-nano) var(--space-2);
+  font-size: var(--text-xs);
+    line-height: var(--leading-xs);
+}
+
+.prose mark {
+  background-color: var(--color-highlight-bg);
+  color: var(--color-highlight-text);
+  border-radius: var(--radius-xs);
+  padding: 0 var(--space-nano);
 }
 
 .prose pre {
@@ -274,6 +290,10 @@ time,
   text-align: left;
   padding: var(--space-3);
   border-bottom: var(--border-thin) solid var(--color-border);
+}
+
+.prose th {
+  background: var(--color-table-header);
 }
 
 /* Images and figures */

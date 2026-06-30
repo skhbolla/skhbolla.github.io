@@ -1,0 +1,84 @@
+---
+import type { DirectoryProps } from "../../types";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Breadcrumb from "../Breadcrumb.astro";
+import MetricsTable from "../MetricsTable.astro";
+import PostList from "../PostList.astro";
+import { buildListItems, titleCase } from "../../utils/listBuilder";
+
+interface Props extends DirectoryProps {
+  category: string;
+}
+
+const { meta, posts, activeDir, category } = Astro.props;
+
+const listItems = buildListItems(posts, activeDir, `/${category}`);
+
+const pageTitle = activeDir
+  ? `${meta.title} / ${activeDir.replace(/\//g, " / ").replace(/-/g, " ")}`
+  : meta.title;
+
+const currentDirName = activeDir
+  ? titleCase(activeDir.split("/").pop()!)
+  : meta.title;
+---
+
+<BaseLayout title={pageTitle} description={meta.description}>
+  <div class="category-container">
+    <Breadcrumb
+      category={meta.title}
+      categoryUrl={`/${category}`}
+      title={currentDirName}
+      slug={activeDir}
+    />
+    <div class="category-header">
+      <h1 class="category-subtitle">{meta.description}</h1>
+    </div>
+    <MetricsTable posts={posts} />
+    <div class="posts-grid-container">
+      <PostList items={listItems} />
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .category-container {
+    max-width: var(--measure-grid);
+    margin-inline: auto;
+  }
+
+  .category-subtitle {
+    font-family: var(--font-label);
+    font-size: var(--text-xs);
+    line-height: var(--leading-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-muted);
+    margin-top: 0;
+    margin-bottom: var(--space-3);
+    font-weight: var(--font-weight-medium);
+  }
+
+  .category-header {
+    max-width: var(--measure-grid);
+    margin-inline: auto;
+    text-align: center;
+    margin-top: var(--space-4);
+  }
+
+  .posts-grid-container {
+    max-width: var(--measure-grid);
+    margin-inline: auto;
+    margin-bottom: var(--space-24);
+  }
+
+  /* Scale up breathing room on larger screens */
+  @media (min-width: 64rem) {
+    .category-header {
+      margin-bottom: var(--space-12);
+    }
+    .posts-grid-container {
+      margin-bottom: var(--space-hero);
+    }
+  }
+</style>

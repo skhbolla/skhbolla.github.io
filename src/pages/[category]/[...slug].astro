@@ -1,100 +1,11 @@
 ---
-import { getCollection, render } from "astro:content";
-import type { CollectionEntry } from "astro:content";
-import PostLayout from "../../layouts/PostLayout.astro";
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import PostList from "../../components/PostList.astro";
-import type { ListItem } from "../../components/PostList.astro";
+import { getCollection } from "astro:content";
 import { CATEGORY_MAP } from "../../utils/categories";
-import type { CollectionName, CategoryMeta } from "../../utils/categories";
-import Breadcrumb from "../../components/Breadcrumb.astro";
-import MetricsTable from "../../components/MetricsTable.astro";
+import type { AnyPost, DirectoryProps, PostProps } from "../../types";
+import CategoryView from "../../components/views/CategoryView.astro";
+import PostView from "../../components/views/PostView.astro";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-//
-// CollectionName and CategoryMeta are derived from CATEGORY_MAP in
-// categories.ts — no collection names are hardcoded here. Adding a new
-// category means touching categories.ts only.
-
-type AnyPost = { [K in CollectionName]: CollectionEntry<K> }[CollectionName];
-
-type PostProps = { type: "post"; meta: CategoryMeta; post: AnyPost };
-type DirectoryProps = {
-  type: "directory";
-  meta: CategoryMeta;
-  posts: AnyPost[];
-  activeDir: string;
-};
 type Props = PostProps | DirectoryProps;
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-/** Capitalize every word in a hyphen-separated path segment. */
-function titleCase(s: string): string {
-  return s.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
-}
-
-/**
- * Builds the mixed series + post list for directory index pages.
- *
- * - Posts at the current depth → standalone post cards.
- * - Subdirectories with one post → promoted to a standalone post card.
- * - Subdirectories with multiple posts → a series card.
- *
- * Result is sorted: series first (alpha), then posts newest-first.
- */
-function buildListItems(
-  posts: AnyPost[],
-  activeDir: string,
-  categoryUrl: string,
-): ListItem[] {
-  const directPosts: AnyPost[] = [];
-  const subdirGroups = new Map<string, AnyPost[]>();
-
-  for (const post of posts) {
-    const relId = activeDir ? post.id.slice(activeDir.length + 1) : post.id;
-    const parts = relId.split("/");
-
-    if (parts.length === 1) {
-      directPosts.push(post);
-    } else {
-      const subdir = parts[0];
-      const group = subdirGroups.get(subdir) ?? [];
-      group.push(post);
-      subdirGroups.set(subdir, group);
-    }
-  }
-
-  const items: ListItem[] = directPosts.map((post) => ({ type: "post", post }));
-
-  for (const [subdir, groupPosts] of subdirGroups) {
-    if (groupPosts.length === 1) {
-      items.push({ type: "post", post: groupPosts[0] });
-    } else {
-      const subdirPath = activeDir ? `${activeDir}/${subdir}` : subdir;
-      const subdirTitle = titleCase(subdir);
-      items.push({
-        type: "series",
-        id: subdirPath,
-        title: subdirTitle,
-        description: `A collection on the topic of ${subdirTitle}.`,
-        postCount: groupPosts.length,
-        url: `${categoryUrl}/${subdirPath}/`,
-      });
-    }
-  }
-
-  return items.sort((a, b) => {
-    if (a.type !== b.type) return a.type === "series" ? -1 : 1;
-    if (a.type === "series" && b.type === "series")
-      return a.title.localeCompare(b.title);
-    // Both posts — newest first
-    return (
-      (b as Extract<ListItem, { type: "post" }>).post.data.date.valueOf() -
-      (a as Extract<ListItem, { type: "post" }>).post.data.date.valueOf()
-    );
-  });
-}
 
 // ─── Static path generation ───────────────────────────────────────────────────
 
@@ -151,42 +62,22 @@ export async function getStaticPaths() {
   return paths;
 }
 
-// ─── Page data ────────────────────────────────────────────────────────────────
-//
-// All async work happens here in the frontmatter so the template stays
-// purely declarative.
+// ─── Page Controller Logic ────────────────────────────────────────────────────
 
 const { category } = Astro.params;
-const { type, meta } = Astro.props as Props;
+const props = Astro.props as Props;
 
-// ── Post branch ──────────────────────────────────────────────────────────────
-let post: AnyPost | undefined;
-let Content: Awaited<ReturnType<typeof render>>["Content"] | undefined;
-let headings: { depth: number; slug: string; text: string }[] = [];
 let seriesPosts: AnyPost[] = [];
 
-// ── Directory branch ─────────────────────────────────────────────────────────
-let pageTitle: string = meta.title;
-let currentDirName: string = meta.title;
-let listItems: ListItem[] = [];
-let activeDir = "";
-
-if (type === "post") {
-  const postProps = Astro.props as PostProps;
-  post = postProps.post;
-
-  const rendered = await render(post);
-  Content = rendered.Content;
-  headings = rendered.headings;
-
+if (props.type === "post") {
   // Resolve sibling posts in the same directory (the series)
-  const pathParts = post.id.split("/");
+  const pathParts = props.post.id.split("/");
   pathParts.pop(); // strip filename
   const seriesPath = pathParts.join("/");
 
   if (seriesPath) {
     const allPosts = (await getCollection(
-      meta.collection,
+      props.meta.collection,
       ({ data }) => !data.draft,
     )) as AnyPost[];
     seriesPosts = allPosts
@@ -197,100 +88,13 @@ if (type === "post") {
       })
       .sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
   }
-} else {
-  const dirProps = Astro.props as DirectoryProps;
-  activeDir = dirProps.activeDir;
-
-  listItems = buildListItems(dirProps.posts, activeDir, `/${category}`);
-
-  pageTitle = activeDir
-    ? `${meta.title} / ${activeDir.replace(/\//g, " / ").replace(/-/g, " ")}`
-    : meta.title;
-
-  currentDirName = activeDir
-    ? titleCase(activeDir.split("/").pop()!)
-    : meta.title;
 }
 ---
 
 {
-  type === "post" && post && Content ? (
-    <PostLayout
-      title={post.data.title}
-      subtitle={post.data.subtitle}
-      author={post.data.author}
-      heroImage={post.data.heroImage}
-      description={post.data.description}
-      date={post.data.date}
-      category={meta.title}
-      categoryUrl={`/${category}`}
-      tags={post.data.tags}
-      headings={headings}
-      slug={post.id}
-      seriesPosts={seriesPosts}
-    >
-      <Content />
-    </PostLayout>
-  ) : type === "directory" ? (
-    <BaseLayout title={pageTitle} description={meta.description}>
-      <div class="category-container">
-        <Breadcrumb
-          category={meta.title}
-          categoryUrl={`/${category}`}
-          title={currentDirName}
-          slug={activeDir}
-        />
-        <div class="category-header">
-          <h1 class="category-subtitle">{meta.description}</h1>
-        </div>
-        <MetricsTable posts={(Astro.props as DirectoryProps).posts} />
-        <div class="posts-grid-container">
-          <PostList items={listItems} />
-        </div>
-      </div>
-    </BaseLayout>
-  ) : null
+  props.type === "post" ? (
+    <PostView {...props} category={category} seriesPosts={seriesPosts} />
+  ) : (
+    <CategoryView {...props} category={category} />
+  )
 }
-
-<style>
-  .category-container {
-    max-width: var(--measure-grid);
-    margin-inline: auto;
-  }
-
-  .category-subtitle {
-    font-family: var(--font-label);
-    font-size: var(--text-xs);
-    line-height: var(--leading-xs);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-wide);
-    color: var(--color-text-muted);
-    margin-top: 0;
-    margin-bottom: var(--space-3);
-
-    font-weight: var(--font-weight-medium);
-  }
-
-  .category-header {
-    max-width: var(--measure-grid);
-    margin-inline: auto;
-    text-align: center;
-    margin-top: var(--space-4);
-  }
-
-  .posts-grid-container {
-    max-width: var(--measure-grid);
-    margin-inline: auto;
-    margin-bottom: var(--space-24);
-  }
-
-  /* Scale up breathing room on larger screens */
-  @media (min-width: 64rem) {
-    .category-header {
-      margin-bottom: var(--space-12);
-    }
-    .posts-grid-container {
-      margin-bottom: var(--space-hero);
-    }
-  }
-</style>

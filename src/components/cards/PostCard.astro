@@ -1,0 +1,229 @@
+---
+import { formatDate } from "../../utils/formatDate";
+import { CATEGORY_MAP } from "../../utils/categories";
+import type { PostItem } from "../../types";
+
+type Props = PostItem;
+const { post } = Astro.props;
+
+// Dynamically resolve category slug from the collection name
+function getCategorySlug(collectionName: string): string {
+  const entry = Object.entries(CATEGORY_MAP).find(
+    ([_, meta]) => meta.collection === collectionName
+  );
+  return entry ? entry[0] : collectionName;
+}
+
+const categorySlug = getCategorySlug(post.collection);
+---
+
+<li class="post-item">
+  <a href={`/${categorySlug}/${post.id}/`} class="post-card">
+    <div class="card-meta">
+      <span class="category-badge">Post</span>
+      <time class="meta" datetime={post.data.date.toISOString()}>
+        {formatDate(post.data.date)}
+      </time>
+    </div>
+    <h3 class="card-title">{post.data.title}</h3>
+    <p class="card-description">{post.data.description}</p>
+    <div class="card-footer">
+      <span class="read-link">
+        Read Post <span class="arrow">↳</span>
+      </span>
+    </div>
+  </a>
+</li>
+
+<style>
+  .post-item {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    flex: 0 1 var(--card-size);
+    width: 100%;
+    max-width: var(--card-size);
+  }
+
+  .post-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1 / 1.35;
+    background: var(--color-paper);
+    padding: var(--space-6) var(--space-6) var(--space-4);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-paper);
+    border: var(--border-thin) solid var(--color-card-border);
+    text-decoration: none;
+    color: var(--color-text);
+    overflow: hidden;
+    transition:
+      transform var(--transition-base),
+      box-shadow var(--transition-base),
+      border-color var(--transition-base);
+  }
+
+  .post-card:not(.front-card):hover {
+    transform: translateY(calc(var(--space-pixel) * -3)) scale(var(--transform-scale-hover));
+    border-color: var(--color-accent);
+    box-shadow: var(--shadow-paper-hover);
+  }
+
+  .card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-3);
+    width: 100%;
+  }
+
+  .category-badge {
+    font-family: var(--font-label);
+    font-size: var(--text-micro);
+    line-height: var(--leading-micro);
+    background: var(--color-code-bg);
+    color: var(--color-tag);
+    border: var(--border-thin) solid transparent;
+    padding: var(--space-nano) var(--space-micro);
+    border-radius: var(--radius-sm);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    transition:
+      background var(--transition-base),
+      border-color var(--transition-base),
+      color var(--transition-base);
+  }
+
+  .post-card:hover .category-badge {
+    border-color: var(--color-tag);
+    background: var(--color-bg);
+    color: var(--color-tag);
+  }
+
+  .card-meta time {
+    font-size: var(--text-micro);
+    line-height: var(--leading-micro);
+    color: var(--color-text-muted);
+  }
+
+  .card-title {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: var(--leading-base);
+    font-weight: 500;
+    margin-top: 0;
+    margin-bottom: var(--space-2);
+    transition: color var(--transition-base);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .post-card:hover .card-title {
+    color: var(--color-accent);
+  }
+
+  .card-description {
+    font-size: var(--text-sm);
+    line-height: var(--leading-sm);
+    color: var(--color-text);
+    margin: 0;
+    margin-bottom: var(--space-3);
+    flex-grow: 1;
+    text-align: justify;
+    hyphens: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: auto;
+  }
+
+  .read-link {
+    font-family: var(--font-label);
+    font-size: var(--text-xs);
+    line-height: var(--leading-xs);
+    color: var(--color-text-muted);
+    transition: color var(--transition-base);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-nano);
+  }
+
+  .post-card:hover .read-link {
+    color: var(--color-accent);
+  }
+
+  .arrow {
+    transition: transform var(--transition-base);
+  }
+
+  .post-card:hover .arrow {
+    transform: translate(calc(var(--space-pixel) * 2), calc(var(--space-pixel) * 2));
+  }
+
+  /* Tablet Overrides */
+  @media (max-width: 64rem) and (min-width: 40rem) {
+    .post-item {
+      flex: 0 1 var(--card-size-md);
+      max-width: var(--card-size-md);
+    }
+    .post-card {
+      padding: var(--space-4) var(--space-4) var(--space-3);
+    }
+    .card-title {
+      font-size: var(--text-sm);
+      line-height: var(--leading-sm);
+    }
+    .card-description {
+      -webkit-line-clamp: 3;
+    }
+  }
+
+  /* Mobile Overrides */
+  @media (max-width: 40rem) {
+    .post-item {
+      flex: 0 1 var(--card-size-sm);
+      max-width: var(--card-size-sm);
+    }
+    .post-card {
+      padding: var(--space-4) var(--space-4) var(--space-3);
+    }
+    .post-card:not(.front-card):hover {
+      transform: translateY(calc(var(--space-pixel) * -2)) scale(var(--transform-scale-hover-sm));
+    }
+    .card-meta {
+      margin-bottom: var(--space-3);
+    }
+    .category-badge {
+      padding: var(--space-nano) var(--space-micro);
+    }
+    .card-title {
+      font-size: var(--text-sm);
+      line-height: var(--leading-sm);
+      margin-bottom: var(--space-2);
+    }
+    .card-description {
+      font-size: var(--text-xs);
+      line-height: var(--leading-xs);
+      margin-bottom: var(--space-3);
+      -webkit-line-clamp: 3;
+    }
+    .read-link {
+      font-size: var(--text-micro);
+      line-height: var(--leading-micro);
+      gap: var(--space-nano);
+    }
+  }
+</style>

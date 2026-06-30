@@ -1,0 +1,30 @@
+---
+import { render } from "astro:content";
+import type { PostProps, AnyPost } from "../../types";
+import PostLayout from "../../layouts/PostLayout.astro";
+
+interface Props extends PostProps {
+  category: string;
+  seriesPosts: AnyPost[];
+}
+
+const { post, meta, category, seriesPosts } = Astro.props;
+const { Content, headings } = await render(post);
+---
+
+<PostLayout
+  title={post.data.title}
+  subtitle={post.data.subtitle}
+  author={post.data.author}
+  heroImage={post.data.heroImage}
+  description={post.data.description}
+  date={post.data.date}
+  category={meta.title}
+  categoryUrl={`/${category}`}
+  tags={post.data.tags}
+  headings={headings}
+  slug={post.id}
+  seriesPosts={seriesPosts}
+>
+  <Content />
+</PostLayout>

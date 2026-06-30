@@ -138,9 +138,12 @@
   --size-nav-btn: 1.75rem;
 
   /* Card dimensions — post previews */
-  --card-size: 14rem;        /* ~224px — desktop/tablet */
-  --card-size-md: 11.5rem;   /* ~184px — medium mobile (40–64rem) */
-  --card-size-sm: 10.125rem; /* ~162px — small mobile */
+  --card-size: 11.5rem;
+  /* ~184px — desktop/tablet */
+  --card-size-md: 10.5rem;
+  /* ~168px — medium mobile (40–64rem) */
+  --card-size-sm: 9.5rem;
+  /* ~152px — small mobile */
 
   /* Transitions & Transforms */
   --transition-fast: 0.15s ease;
@@ -155,9 +158,12 @@
 
   /* Root font sizes for the dynamic scaling system */
   --font-size-root: 16px;
-  --font-size-root-md: 15.5px; /* ≤ 64rem */
-  --font-size-root-sm: 15px;   /* ≤ 35rem */
-  --font-size-root-xl: 14.5px; /* ≥ 90rem */
+  --font-size-root-md: 15.5px;
+  /* ≤ 64rem */
+  --font-size-root-sm: 15px;
+  /* ≤ 35rem */
+  --font-size-root-xl: 14.5px;
+  /* ≥ 90rem */
 
   /* Form & Radius Scale (Reference standard) */
   --radius-xs: 0.125rem;

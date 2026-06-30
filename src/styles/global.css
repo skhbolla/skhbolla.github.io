@@ -146,8 +146,8 @@ time,
 }
 
 .prose h1 {
-  font-size: var(--text-4xl);
-  line-height: var(--leading-4xl);
+  font-size: var(--text-3xl);
+  line-height: var(--leading-3xl);
 }
 
 .prose h2 {
@@ -156,8 +156,16 @@ time,
 }
 
 .prose h3 {
-  font-size: var(--text-base);
-  line-height: var(--leading-base);
+  font-size: var(--text-xl);
+  line-height: var(--leading-xl);
+}
+
+.prose h4 {
+  font-size: var(--text-lg);
+  line-height: var(--leading-lg);
+  margin-top: var(--space-8);
+  margin-bottom: var(--space-3);
+  font-weight: 600;
 }
 
 /* Paragraphs */

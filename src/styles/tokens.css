@@ -75,6 +75,7 @@
   --text-lg: 1.125rem;
   --text-xl: 1.25rem;
   --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
   --text-4xl: 2.25rem;
   --text-5xl: 3rem;
   --text-icon: 1.1rem;
@@ -87,6 +88,7 @@
   --leading-lg: calc(1.75 / 1.125);
   --leading-xl: calc(1.75 / 1.25);
   --leading-2xl: calc(2 / 1.5);
+  --leading-3xl: calc(2.25 / 1.875);
   --leading-4xl: calc(2.5 / 2.25);
   --leading-5xl: 1;
 
@@ -132,7 +134,7 @@
   /* xl-screen vertical breathing room */
 
   /* Layout boundaries (Reference standard) */
-  --measure: 48rem;
+  --measure: 53rem;
   --measure-grid: 64rem;
   --scroll-padding: 5rem;
   --size-nav-btn: 1.75rem;

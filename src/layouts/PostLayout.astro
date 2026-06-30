@@ -73,7 +73,9 @@ const formattedDate = formatDate(date);
     min-width: 0;
     max-width: var(--measure);
     margin-inline: auto;
-    width: 100%;
+    width: calc(
+      100% - var(--space-12)
+    ); /* Leaves a nice gap on tablets so edges are visible */
   }
 
   .paper-overlay {
@@ -100,10 +102,13 @@ const formattedDate = formatDate(date);
     }
   }
 
-  /* Small tablets / phones — edge-to-edge, drop the card metaphor */
-  @media (max-width: 48rem) {
+  /* Small tablets / phones — edge-to-edge */
+  @media (max-width: 35rem) {
+    .paper-wrapper {
+      width: 100%;
+    }
     .paper-overlay {
-      padding: var(--space-12) var(--space-8);
+      padding: var(--space-8) var(--space-4);
       border-radius: 0;
       border: none;
       box-shadow: none;
@@ -113,7 +118,7 @@ const formattedDate = formatDate(date);
 </style>
 
 <style is:global>
-  @media (max-width: 48rem) {
+  @media (max-width: 35rem) {
     body {
       background: var(--color-paper);
     }

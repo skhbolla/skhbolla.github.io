@@ -66,7 +66,7 @@
    --color-meta-divider: var(--base08);
    --color-series-badge: var(--base0B);
    --color-nav-active: var(--base0A);
-   
+
    --shadow-base: var(--base05);
    --highlight-base: var(--base07);
 
@@ -92,24 +92,40 @@
 /* ─── Dark (Base16) ────────────────────────────────────────────────────────── */
 [data-theme='dark'] {
    /* Core Base16 Palette (Rosé Pine) */
-   --base00: #191724; /* Background */
-   --base01: #1f1d2e; /* Lighter Background (Raised) */
-   --base02: #26233a; /* Selection / Code Background */
-   --base03: #524f67; /* Borders / Line Highlighting */
-   --base04: #908caa; /* Muted Foreground / Comments */
-   --base05: #e0def4; /* Default Foreground */
-   --base06: #f8f8f2; /* Light Foreground */
-   --base07: #faf4ed; /* Lightest */
-   
+   --base00: #191724;
+   /* Background */
+   --base01: #1f1d2e;
+   /* Lighter Background (Raised) */
+   --base02: #26233a;
+   /* Selection / Code Background */
+   --base03: #524f67;
+   /* Borders / Line Highlighting */
+   --base04: #908caa;
+   /* Muted Foreground / Comments */
+   --base05: #e0def4;
+   /* Default Foreground */
+   --base06: #f8f8f2;
+   /* Light Foreground */
+   --base07: #faf4ed;
+   /* Lightest */
+
    /* Accent Palette (Rosé Pine) */
-   --base08: #eb6f92; /* Red (Love) */
-   --base09: #f6c177; /* Orange (Gold) */
-   --base0A: #ebbcba; /* Yellow (Rose) */
-   --base0B: #31748f; /* Green (Pine) */
-   --base0C: #9ccfd8; /* Cyan (Foam) */
-   --base0D: #c4a7e7; /* Blue (Iris) */
-   --base0E: #b4637a; /* Magenta */
-   --base0F: #524f67; /* Brown/Muted */
+   --base08: #eb6f92;
+   /* Red (Love) */
+   --base09: #f6c177;
+   /* Orange (Gold) */
+   --base0A: #ebbcba;
+   /* Yellow (Rose) */
+   --base0B: #31748f;
+   /* Green (Pine) */
+   --base0C: #9ccfd8;
+   /* Cyan (Foam) */
+   --base0D: #c4a7e7;
+   /* Blue (Iris) */
+   --base0E: #b4637a;
+   /* Magenta */
+   --base0F: #524f67;
+   /* Brown/Muted */
 
    /* Semantic Mappings */
    --color-bg: var(--base00);
@@ -120,7 +136,8 @@
    --color-text-muted: var(--base04);
    --color-text: var(--base05);
    --color-heading: var(--base06);
-   --color-accent: var(--base0D); /* Iris is an excellent accent color */
+   --color-accent: var(--base0D);
+   /* Iris is an excellent accent color */
    --color-link: var(--base0D);
    --color-link-hover: var(--base0C);
    --color-progress: var(--base0E);
@@ -132,12 +149,13 @@
    --color-meta-divider: var(--base08);
    --color-series-badge: var(--base0B);
    --color-nav-active: var(--base0A);
-   
+
    --shadow-base: #000000;
    --highlight-base: var(--base05);
 
    --color-highlight-bg: var(--base0A);
-   --color-highlight-text: var(--base00); /* Deepest contrast for highlights */
+   --color-highlight-text: var(--base00);
+   /* Deepest contrast for highlights */
    --color-inline-code: var(--base09);
 
    /* Derived Visuals */

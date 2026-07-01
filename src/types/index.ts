@@ -21,6 +21,7 @@ export type PostProps = {
   type: "post";
   meta: CategoryMeta;
   post: AnyPost;
+  displayNumber?: string;
 };
 
 // ─── List Items ───────────────────────────────────────────────────────────────
@@ -29,6 +30,9 @@ export interface SeriesItem {
   type: "series";
   id: string;
   title: string;
+  displayTitle?: string;
+  displayNumber?: string;
+  hierarchy?: number[];
   description: string;
   postCount: number;
   url: string;
@@ -37,6 +41,9 @@ export interface SeriesItem {
 export interface PostItem {
   type: "post";
   post: AnyPost;
+  displayTitle?: string;
+  displayNumber?: string;
+  hierarchy?: number[];
 }
 
 export interface CollectionItem {

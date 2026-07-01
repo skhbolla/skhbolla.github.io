@@ -9,9 +9,10 @@ interface Props {
   date: Date;
   formattedDate: string;
   heroImage?: ImageMetadata;
+  displayNumber?: string;
 }
 
-const { title, subtitle, author, date, formattedDate, heroImage } = Astro.props;
+const { title, subtitle, author, date, formattedDate, heroImage, displayNumber } = Astro.props;
 ---
 
 <header class="post-header">
@@ -20,7 +21,10 @@ const { title, subtitle, author, date, formattedDate, heroImage } = Astro.props;
     {author && <span class="bullet">•</span>}
     <time datetime={date.toISOString()}>{formattedDate}</time>
   </div>
-  <h1>{title}</h1>
+  <h1>
+    {displayNumber && <span class="post-number">{displayNumber}. </span>}
+    {title}
+  </h1>
   {subtitle && <h2 class="post-subtitle">{subtitle}</h2>}
   <div class="header-divider">╌╌╌╌</div>
   {
@@ -73,6 +77,10 @@ const { title, subtitle, author, date, formattedDate, heroImage } = Astro.props;
     overflow-wrap: break-word;
     hyphens: auto;
     max-width: 100%;
+  }
+
+  .post-number {
+    font-variant-numeric: tabular-nums;
   }
 
   .post-subtitle {

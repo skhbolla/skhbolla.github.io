@@ -25,6 +25,7 @@ const { Content, headings } = await render(post);
   headings={headings}
   slug={post.id}
   seriesPosts={seriesPosts}
+  displayNumber={Astro.props.displayNumber}
 >
   <Content />
 </PostLayout>

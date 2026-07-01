@@ -25,7 +25,10 @@ const categorySlug = getCategorySlug(post.collection);
         {formatDate(post.data.date)}
       </time>
     </div>
-    <h3 class="card-title">{post.data.title}</h3>
+    <h3 class="card-title">
+      {Astro.props.displayNumber && <span class="post-number">{Astro.props.displayNumber}. </span>}
+      {Astro.props.displayTitle || post.data.title}
+    </h3>
     <p class="card-description">{post.data.description}</p>
     <div class="card-footer">
       <span class="read-link">

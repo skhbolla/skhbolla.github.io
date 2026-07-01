@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+import { getHierarchyRegistry } from "../../utils/hierarchy";
 import { CATEGORY_MAP } from "../../utils/categories";
 import type { AnyPost, DirectoryProps, PostProps } from "../../types";
 import CategoryView from "../../components/views/CategoryView.astro";
@@ -75,19 +76,48 @@ if (props.type === "post") {
   pathParts.pop(); // strip filename
   const seriesPath = pathParts.join("/");
 
+  const allPosts = (await getCollection(
+    props.meta.collection,
+    ({ data }) => !data.draft,
+  )) as AnyPost[];
+  const registry = getHierarchyRegistry(props.meta.collection, allPosts);
+
   if (seriesPath) {
-    const allPosts = (await getCollection(
-      props.meta.collection,
-      ({ data }) => !data.draft,
-    )) as AnyPost[];
     seriesPosts = allPosts
       .filter((p) => {
         const pParts = p.id.split("/");
         pParts.pop();
         return pParts.join("/") === seriesPath;
       })
-      .sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
+      .sort((a, b) => {
+        const aHier = registry.get(a.id)?.hierarchy || [];
+        const bHier = registry.get(b.id)?.hierarchy || [];
+
+        const minLen = Math.min(aHier.length, bHier.length);
+        for (let i = 0; i < minLen; i++) {
+          if (aHier[i] !== bHier[i]) {
+            return aHier[i] - bHier[i];
+          }
+        }
+        
+        if (aHier.length !== bHier.length) {
+          if (aHier.length > 0 && bHier.length > 0) {
+            return aHier.length - bHier.length;
+          }
+        }
+
+        if (aHier.length === 0 && bHier.length === 0) {
+          return a.data.date.valueOf() - b.data.date.valueOf();
+        }
+
+        if (aHier.length > 0 && bHier.length === 0) return -1;
+        if (aHier.length === 0 && bHier.length > 0) return 1;
+
+        return 0;
+      });
   }
+  
+  props.displayNumber = registry.get(props.post.id)?.displayNumber;
 }
 ---
 

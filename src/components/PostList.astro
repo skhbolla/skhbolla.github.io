@@ -16,7 +16,7 @@ const { items } = Astro.props;
       if (item.type === "series" || item.type === "collection") {
         return <SeriesCard item={item} />;
       } else {
-        return <PostCard type="post" post={item.post} />;
+        return <PostCard {...item} />;
       }
     })
   }
